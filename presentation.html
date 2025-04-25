@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kwik Discovery Hackathon Presentation</title>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- Global Styles & Variables --- */
+        :root {
+            --bg-gradient-start: #191970;
+            --bg-gradient-end: #1A1A1A;
+            --accent1: #FF00FF; /* Magenta */
+            --accent2: #00FFFF; /* Cyan */
+            --accent3: #32CD32; /* Lime Green */
+            --text-color: #FFFFFF;
+            --tagline-color: #CCCCCC;
+            --glow-color-1: rgba(255, 0, 255, 0.7);
+            --glow-color-2: rgba(0, 255, 255, 0.7);
+            --font-main: 'Poppins', sans-serif;
+            --overlay-bg: rgba(0, 0, 0, 0.75);
+            --overlay-text: var(--text-color);
+            --column-bg: rgba(255, 255, 255, 0.05);
+            --comparison-col-bg: rgba(255, 255, 255, 0.03);
+            --success-color: var(--accent3);
+            --warning-color: #ffc107; /* Amber */
+            --diagram-line-color: rgba(255, 255, 255, 0.3);
+
+            /* --- Glassmorphism & Subtle Neumorphism Variables --- */
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-blur: 10px;
+            --glass-border-color: rgba(255, 255, 255, 0.18);
+            --glass-border: 1px solid var(--glass-border-color);
+            --glass-neumorphic-shadow:
+                3px 3px 8px rgba(0, 0, 0, 0.2),
+                -2px -2px 6px rgba(255, 255, 255, 0.05),
+                inset 1px 1px 2px rgba(255, 255, 255, 0.09),
+                inset -1px -1px 2px rgba(0, 0, 0, 0.15);
+            --glass-neumorphic-shadow-lighter:
+                2px 2px 5px rgba(0, 0, 0, 0.15),
+                -1px -1px 4px rgba(255, 255, 255, 0.04),
+                inset 1px 1px 1px rgba(255, 255, 255, 0.07),
+                inset -1px -1px 1px rgba(0, 0, 0, 0.1);
+            --glass-border-radius: 12px;
+
+            /* --- Specific Overlay Backgrounds (Based on PRD Examples) --- */
+            --overlay-bg: rgba(0, 0, 0, 0.4); /* Default/Fallback */
+            --overlay-discount-bg: linear-gradient(45deg, var(--accent1), #e60073);
+            --overlay-new-bg: rgba(0, 255, 255, 0.6); /* Cyan */
+            --overlay-bought-bg: rgba(255, 0, 255, 0.6); /* Magenta */
+            --overlay-low-stock-bg: var(--accent2);
+            --overlay-bestseller-bg: var(--accent3);
+            --overlay-timer-bg: rgba(255, 165, 0, 0.9); /* Orange */
+            --overlay-selling-fast-bg: linear-gradient(45deg, #fd7e14, #ff6b6b); /* Orange-Red */
+            --overlay-exclusive-bg: #8e44ad; /* Purple */
+            --overlay-sustainable-bg: #27ae60; /* Green */
+            --overlay-natural-bg: #795548; /* Brown */
+            --overlay-tag-bg: rgba(108, 117, 125, 0.7); /* Grey */
+            --overlay-lowest-price-bg: #fcc419; /* Yellow */
+            --overlay-reorder-bg: linear-gradient(45deg, #4dabf7, #15aabf); /* Blue Gradient */
+            --overlay-limited-bg: linear-gradient(45deg, #fd7e14, #f06595); /* Orange-Pink */
+            --overlay-price-drop-bg: #ff922b; /* Bright Orange */
+
+            /* --- Other Variables --- */
+            --overlay-text: var(--text-color);
+            --overlay-dark-text: var(--bg-gradient-end); /* For light backgrounds */
+            --cta-bg: linear-gradient(90deg, rgba(255, 0, 255, 0.7), rgba(0, 255, 255, 0.7));
+            --cta-text: var(--text-color);
+            --reorder-bar-bg: rgba(255, 255, 255, 0.2);
+            --reorder-bar-fill: var(--accent3);
+
+            /* --- Overlay Positioning --- */
+            --overlay-offset: 18px; /* Increased offset from corners */
+
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; width: 100%; font-family: var(--font-main); color: var(--text-color); overflow: hidden; background-color: var(--bg-gradient-end); }
+
+        /* --- Presentation Container --- */
+        .presentation-container { width: 100%; height: 100vh; position: relative; overflow: hidden; }
+
+        /* --- Base Slide Styles --- */
+        .slide { width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; flex-direction: column; justify-content: center; align-items: center; text-align: center; overflow: auto; /* Allow scrolling if content overflows vertically */ padding: 40px 20px; background-color: var(--bg-gradient-end); opacity: 0; transition: opacity 0.5s ease-in-out; position: relative; }
+        .slide::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)); pointer-events: none; z-index: 1; }
+        .slide-content { position: relative; z-index: 2; padding: 30px; background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)); -webkit-backdrop-filter: blur(var(--glass-blur)); border: var(--glass-border); border-radius: var(--glass-border-radius); box-shadow: var(--glass-neumorphic-shadow); transition: box-shadow 0.3s ease, transform 0.3s ease, background-color 0.3s ease; width: 90%; /* Ensure content doesn't always stretch 100% */ max-width: 1200px; /* Limit max width */ margin: 20px auto; /* Add some margin */ }
+        .slide.active-slide { display: flex; opacity: 1; z-index: 2; }
+
+        /* --- Navigation Buttons --- */
+        .slide-navigation { position: fixed; bottom: 20px; right: 20px; z-index: 10; display: flex; gap: 10px; }
+        .nav-button { background: var(--glass-bg); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); color: var(--text-color); border: var(--glass-border); border-radius: 50%; width: 40px; height: 40px; font-size: 18px; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: all 0.3s ease; box-shadow: var(--glass-neumorphic-shadow-lighter); }
+        .nav-button:hover:not(:disabled) { background: rgba(255, 255, 255, 0.15); transform: translateY(-2px); box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25), -3px -3px 8px rgba(255, 255, 255, 0.07), inset 1px 1px 1px rgba(255, 255, 255, 0.08), inset -1px -1px 1px rgba(0, 0, 0, 0.12); }
+        .nav-button:disabled { opacity: 0.4; cursor: not-allowed; transform: scale(1); background: var(--glass-bg); box-shadow: var(--glass-neumorphic-shadow-lighter); }
+
+        /* --- Footer Styling (Common) --- */
+        .slide-footer { position: absolute; bottom: 15px; font-size: 0.8rem; color: rgba(255, 255, 255, 0.5); z-index: 3; opacity: 0; left: 50%; transform: translateX(-50%); width: 90%; text-align: right; /* Keep text aligned right relative to footer width */ }
+        .footer-right { /* Now relative to slide footer */ }
+        .footer-center { text-align: center; }
+
+        /* --- Common Animations --- */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideDownFadeIn { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUpFadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInScale { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+        @keyframes popInIcon { from { opacity: 0; transform: scale(0.5) rotate(-15deg); } to { opacity: 1; transform: scale(1) rotate(0deg); } }
+
+        /* --- Slide 7: Ecosystem Today Styles --- */
+        .slide-7 { background-color: #181a25; } /* Slightly different dark */
+        .slide-7 .slide-title { /* Initial State */ opacity: 0; transform: translateY(-30px); }
+        .slide-7.active-slide .slide-title { animation: slideDownFadeIn 1.8s ease-out 0.2s forwards; }
+        .slide-7 .headline { font-size: 1.3rem; color: var(--tagline-color); margin-bottom: 40px; opacity: 0; transform: translateY(-20px); }
+        .slide-7.active-slide .headline { animation: slideDownFadeIn 1.8s ease-out 0.4s forwards; }
+        .slide-7 .ecosystem-diagram { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 30px; margin-bottom: 40px; }
+        .slide-7 .module-item { display: flex; flex-direction: column; align-items: center; text-align: center; width: 150px; opacity: 0; transform: scale(0.9); }
+        .slide-7.active-slide .module-item { animation: popIn 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .slide-7 .module-item:nth-child(1) { animation-delay: 0.6s; } .slide-7 .module-item:nth-child(2) { animation-delay: 0.8s; } .slide-7 .module-item:nth-child(3) { animation-delay: 1.0s; } .slide-7 .module-item:nth-child(4) { animation-delay: 1.2s; }
+        .slide-7 .module-icon { font-size: 3rem; margin-bottom: 10px; color: var(--accent2); }
+        .slide-7 .module-item:nth-child(1) .module-icon { color: var(--accent1); } /* Discount */
+        .slide-7 .module-item:nth-child(2) .module-icon { color: var(--accent3); } /* Sidecart */
+        .slide-7 .module-item:nth-child(3) .module-icon { color: var(--accent2); } /* Checkout */
+        .slide-7 .module-item:nth-child(4) .module-icon { color: #ffc107; }    /* Popup */
+        .slide-7 .module-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 5px; }
+        .slide-7 .module-desc { font-size: 0.85rem; color: var(--tagline-color); line-height: 1.4; }
+        .slide-7 .gap-text { font-style: italic; color: rgba(255,255,255,0.6); font-size: 0.9rem; opacity: 0; }
+        .slide-7.active-slide .gap-text { animation: fadeIn 2s ease-out 1.5s forwards; }
+
+
+        /* --- Slide 8: Introducing Kwik Discovery Styles --- */
+        .slide-8 { background: radial-gradient(ellipse at top right, #3a3a8a 0%, #1f1f2e 100%); }
+        .slide-8 .slide-title { /* Initial State */ opacity: 0; transform: translateY(-30px); }
+        .slide-8.active-slide .slide-title { animation: slideDownFadeIn 1.8s ease-out 0.2s forwards; }
+        .slide-8 .headline { font-size: 1.4rem; color: var(--text-color); font-weight: 500; margin-bottom: 20px; opacity: 0; transform: translateY(-20px); }
+        .slide-8.active-slide .headline { animation: slideDownFadeIn 1.8s ease-out 0.4s forwards; }
+        .slide-8 .core-concept { font-size: 1rem; color: var(--tagline-color); margin-bottom: 30px; max-width: 700px; opacity: 0; transform: translateY(-20px); }
+        .slide-8.active-slide .core-concept { animation: slideDownFadeIn 1.8s ease-out 0.6s forwards; }
+        .slide-8 .visual-highlight-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; width: 100%; max-width: 900px; margin: 0 auto 30px; justify-content: center; opacity: 0; transform: scale(0.95); }
+        .slide-8.active-slide .visual-highlight-grid { animation: fadeInScale 2s ease-out 0.8s forwards; }
+        .slide-8 .product-card-visual { position: relative; border-radius: 8px; overflow: hidden; display: flex; justify-content: center; align-items: center; height: 200px; }
+        .slide-8 .product-image-visual { display: block; width: 100%; height: 200px; object-fit: contain; background-color: #333; /* Placeholder BG */ }
+        .slide-8 .overlay-visual { position: absolute; padding: 4px 8px; border-radius: 3px; background-color: var(--overlay-bg); color: var(--overlay-text); font-size: 0.8rem; font-weight: 500; z-index: 3; opacity: 0; transform: scale(0.8); }
+        .slide-8.active-slide .overlay-visual { animation: popIn 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .slide-8 .overlay-visual.ov1 { top: 10px; left: 10px; animation-delay: 1.2s; background: var(--accent1); }
+        .slide-8 .overlay-visual.ov2 { top: 10px; right: 10px; animation-delay: 1.4s; background: var(--accent2); color: var(--bg-gradient-end);}
+        .slide-8 .overlay-visual.ov3 { bottom: 10px; left: 10px; animation-delay: 1.6s; background: orange; color: var(--bg-gradient-end);}
+        .slide-8 .overlay-visual.ov4 { bottom: 10px; right: 10px; animation-delay: 1.8s; background: var(--accent3); color: var(--bg-gradient-end);}
+        .slide-8 .key-function { font-size: 1rem; color: var(--tagline-color); max-width: 600px; font-style: italic; opacity: 0; }
+        .slide-8.active-slide .key-function { animation: fadeIn 2s ease-out 2.0s forwards; }
+
+
+        /* --- Slide 9: Ecosystem Synergy Styles --- */
+        .slide-9 { background-color: #1c1e2d; }
+        .slide-9 .slide-title { /* Initial State */ opacity: 0; transform: translateY(-30px); }
+        .slide-9.active-slide .slide-title { animation: slideDownFadeIn 1.8s ease-out 0.2s forwards; }
+        .slide-9 .scenario-example { font-size: 1.2rem; font-weight: 500; color: var(--accent3); margin-bottom: 30px; display: block; opacity: 0; transform: translateY(-20px); }
+        .slide-9.active-slide .scenario-example { animation: slideDownFadeIn 1.8s ease-out 0.4s forwards; }
+        .slide-9 .synergy-flow { display: flex; flex-direction: column; align-items: center; gap: 25px; width: 100%; max-width: 700px; }
+        .slide-9 .flow-step { display: flex; align-items: center; background-color: var(--column-bg); padding: 15px 20px; border-radius: 8px; width: 100%; border-left: 4px solid transparent; opacity: 0; transform: translateX(-30px); }
+        .slide-9.active-slide .flow-step { animation: slideInStep 1.5s ease-out forwards; }
+        .slide-9 .flow-step:nth-child(1) { animation-delay: 0.6s; border-left-color: var(--accent1); } .slide-9 .flow-step:nth-child(2) { animation-delay: 0.9s; border-left-color: var(--accent2); } .slide-9 .flow-step:nth-child(3) { animation-delay: 1.2s; border-left-color: var(--accent3); } .slide-9 .flow-step:nth-child(4) { animation-delay: 1.5s; border-left-color: #ffc107; } .slide-9 .flow-step:nth-child(5) { animation-delay: 1.8s; border-left-color: #f06595; } /* Optional step */
+        @keyframes slideInStep { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+        .slide-9 .flow-icon { font-size: 2rem; width: 40px; text-align: center; margin-right: 20px; color: var(--accent2); flex-shrink: 0; }
+        .slide-9 .flow-step:nth-child(1) .flow-icon { color: var(--accent1); } .slide-9 .flow-step:nth-child(3) .flow-icon { color: var(--accent3); } .slide-9 .flow-step:nth-child(4) .flow-icon { color: #ffc107; } .slide-9 .flow-step:nth-child(5) .flow-icon { color: #f06595; }
+        .slide-9 .flow-text { text-align: left; }
+        .slide-9 .flow-text strong { display: block; font-weight: 700; font-size: 1.1rem; margin-bottom: 3px; color: var(--text-color); }
+        .slide-9 .flow-text span { font-size: 0.9rem; color: var(--tagline-color); line-height: 1.4; }
+        .slide-9 .flow-text .highlight-text { color: var(--accent3); font-weight: 500; background: rgba(50, 205, 50, 0.1); padding: 0 3px; border-radius: 3px;} /* Highlight dynamic text */
+
+
+        /* --- Slide 10: GoKwik Advantage Styles --- */
+        .slide-10 { background-color: #16161d; }
+        .slide-10 .slide-title { /* Initial State */ opacity: 0; transform: translateY(-30px); }
+        .slide-10.active-slide .slide-title { animation: slideDownFadeIn 1.8s ease-out 0.2s forwards; }
+        .slide-10 .headline { font-size: 1.3rem; color: var(--tagline-color); margin-bottom: 40px; opacity: 0; transform: translateY(-20px); }
+        .slide-10.active-slide .headline { animation: slideDownFadeIn 1.8s ease-out 0.4s forwards; }
+        .slide-10 .comparison-columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; width: 100%; max-width: 1000px; }
+        .slide-10 .comparison-column { background-color: var(--comparison-col-bg); padding: 25px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); text-align: center; opacity: 0; transform: translateY(30px); }
+        .slide-10.active-slide .comparison-column { animation: slideUpFadeIn 1.7s ease-out forwards; }
+        .slide-10 .comparison-column:nth-child(1) { animation-delay: 0.6s; } .slide-10 .comparison-column:nth-child(2) { animation-delay: 0.8s; } .slide-10 .comparison-column:nth-child(3) { animation-delay: 1.0s; border: 2px solid var(--accent3); background: rgba(50, 205, 50, 0.05); /* Highlight integrated */ }
+        .slide-10 .column-icon { font-size: 2.5rem; margin-bottom: 15px; color: var(--tagline-color); }
+        .slide-10 .comparison-column:nth-child(3) .column-icon { color: var(--accent3); }
+        .slide-10 .column-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 15px; }
+        .slide-10 .pros-cons-list { list-style: none; padding: 0; margin: 0; text-align: left; }
+        .slide-10 .pros-cons-list li { margin-bottom: 8px; font-size: 0.9rem; line-height: 1.5; position: relative; padding-left: 20px; }
+        .slide-10 .pros-cons-list li::before { font-family: "Font Awesome 5 Free"; font-weight: 900; position: absolute; left: 0; top: 2px; }
+        .slide-10 .pros li::before { content: "\f058"; color: var(--success-color); } /* Checkmark */
+        .slide-10 .cons li::before { content: "\f071"; color: var(--warning-color); } /* Warning */
+        .slide-10 .benefits-list { list-style: none; padding: 0; margin: 0; text-align: left; }
+        .slide-10 .benefits-list li { margin-bottom: 8px; font-size: 0.9rem; line-height: 1.5; position: relative; padding-left: 20px; opacity: 0; transform: translateX(-10px); }
+        .slide-10.active-slide .benefits-list li { animation: slideInBenefit 1s ease-out forwards; }
+        .slide-10 .benefits-list li::before { content: "\f058"; font-family: "Font Awesome 5 Free"; font-weight: 900; position: absolute; left: 0; top: 2px; color: var(--success-color); }
+        /* Stagger benefit list items */
+        .slide-10 .benefits-list li:nth-child(1) { animation-delay: 1.2s; } .slide-10 .benefits-list li:nth-child(2) { animation-delay: 1.3s; } .slide-10 .benefits-list li:nth-child(3) { animation-delay: 1.4s; } .slide-10 .benefits-list li:nth-child(4) { animation-delay: 1.5s; } .slide-10 .benefits-list li:nth-child(5) { animation-delay: 1.6s; } .slide-10 .benefits-list li:nth-child(6) { animation-delay: 1.7s; }
+        @keyframes slideInBenefit { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+
+
+        /* --- Slide 11: Data Loop Styles --- */
+        .slide-11 { background-color: #1a1d2b; }
+        .slide-11 .slide-title { /* Initial State */ opacity: 0; transform: translateY(-30px); }
+        .slide-11.active-slide .slide-title { animation: slideDownFadeIn 1.8s ease-out 0.2s forwards; }
+        .slide-11 .headline { font-size: 1.3rem; color: var(--tagline-color); margin-bottom: 30px; opacity: 0; transform: translateY(-20px); }
+        .slide-11.active-slide .headline { animation: slideDownFadeIn 1.8s ease-out 0.4s forwards; }
+        .slide-11 .data-loop-container { display: flex; flex-direction: column; align-items: center; gap: 30px; width: 100%; max-width: 800px; }
+        /* Simple Diagram Placeholder - Replace with SVG/Canvas for real flow */
+        .slide-11 .diagram-placeholder { width: 250px; height: 250px; border: 3px dashed var(--diagram-line-color); border-radius: 50%; display: flex; justify-content: center; align-items: center; text-align: center; position: relative; margin-bottom: 30px; opacity: 0; transform: scale(0.8) rotate(-45deg); }
+        .slide-11.active-slide .diagram-placeholder { animation: rotateInDiagram 2s ease-out 0.6s forwards; }
+        @keyframes rotateInDiagram { from { opacity: 0; transform: scale(0.8) rotate(-45deg); } to { opacity: 1; transform: scale(1) rotate(0deg); } }
+        .slide-11 .diagram-text { font-size: 1rem; font-weight: 500; color: var(--accent3); line-height: 1.3; }
+        /* Simple arrows around circle */
+        .slide-11 .diagram-placeholder::before, .slide-11 .diagram-placeholder::after { content: '\f061'; /* FontAwesome arrow right */ font-family: "Font Awesome 5 Free"; font-weight: 900; position: absolute; font-size: 1.5rem; color: var(--diagram-line-color); opacity: 0; }
+        .slide-11.active-slide .diagram-placeholder::before { right: -30px; top: 50%; transform: translateY(-50%); animation: fadeInArrow 1s ease-out 1.6s forwards; }
+        .slide-11.active-slide .diagram-placeholder::after { left: 50%; bottom: -30px; transform: translateX(-50%) rotate(90deg); animation: fadeInArrow 1s ease-out 1.8s forwards; }
+        @keyframes fadeInArrow { from { opacity: 0; } to { opacity: 1; } }
+        .slide-11 .analytics-points { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; width: 100%; }
+        .slide-11 .analytics-point { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.05); padding: 10px 15px; border-radius: 6px; opacity: 0; transform: translateY(20px); min-width: 200px;}
+        .slide-11.active-slide .analytics-point { animation: slideUpFadeIn 1.5s ease-out forwards; }
+        .slide-11 .analytics-point:nth-child(1) { animation-delay: 1.2s; } .slide-11 .analytics-point:nth-child(2) { animation-delay: 1.4s; } .slide-11 .analytics-point:nth-child(3) { animation-delay: 1.6s; } .slide-11 .analytics-point:nth-child(4) { animation-delay: 1.8s; }
+        .slide-11 .analytics-icon { font-size: 1.5rem; color: var(--accent2); }
+        .slide-11 .analytics-text { font-size: 0.9rem; color: var(--tagline-color); text-align: left; }
+        .slide-11 .final-benefit { margin-top: 30px; font-size: 1.1rem; color: var(--accent3); font-weight: 500; opacity: 0; }
+        .slide-11.active-slide .final-benefit { animation: fadeIn 2s ease-out 2.0s forwards; }
+        @keyframes flipInOverlay { from { opacity: 0; transform: rotateX(-90deg) scale(0.8); } to { opacity: 1; transform: rotateX(0deg) scale(1); } }
+        @keyframes popInOverlay { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+        @keyframes popInOverlayCenter { from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+        @keyframes fadeInFooter { from { opacity: 0; } to { opacity: 1; } }
+
+        /* --- Slide 1: Title & Hook --- */
+        .slide-1 { background: radial-gradient(ellipse at bottom, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%); }
+        .slide-1 .slide-content { max-width: 700px; padding: 40px; }
+        .slide-1 .particles-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; opacity: 0; }
+        .slide.active-slide .particles-container { animation: fadeIn 3s ease-out forwards; }
+        .slide-1 .particle { position: absolute; width: 3px; height: 3px; background-color: var(--accent2); border-radius: 50%; opacity: 0; box-shadow: 0 0 5px var(--glow-color-2); }
+        .slide.active-slide .particle { animation: particle-animation 26s infinite linear; }
+        .slide.active-slide .particle:nth-child(2n) { background-color: var(--accent1); box-shadow: 0 0 5px var(--glow-color-1); width: 2px; height: 2px; animation-duration: 31s; }
+        .slide.active-slide .particle:nth-child(3n) { background-color: var(--accent3); width: 4px; height: 4px; animation-duration: 21s; box-shadow: 0 0 6px rgba(50, 205, 50, 0.7); }
+        .slide.active-slide .particle:nth-child(odd) { animation-direction: reverse; }
+        @keyframes particle-animation { 0% { transform: translate(var(--x-start), var(--y-start)) scale(0.5); opacity: 0; } 10% { opacity: 0.7; transform: translate(calc(var(--x-start) * 0.8), calc(var(--y-start) * 0.8)) scale(1); } 90% { opacity: 0.7; } 100% { transform: translate(var(--x-end), var(--y-end)) scale(0.5); opacity: 0; } }
+        .slide-1 .visual-element { width: 100%; height: 100%; position: relative; margin: 0; opacity: 0; display: flex; justify-content: center; align-items: center; }
+        .slide-1.active-slide .visual-element { animation: assemblePulse 2.5s ease-out 0.3s forwards; }
+        .slide-1 .frame { width: 100%; max-width: 700px; padding: 40px 30px; border-radius: var(--glass-border-radius); position: relative; background: rgba(25, 25, 112, 0.15); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); border: var(--glass-border); box-shadow: var(--glass-neumorphic-shadow-lighter); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .slide-1 .spark { position: absolute; width: 25px; height: 25px; background: linear-gradient(135deg, var(--accent1), var(--accent2)); color: var(--bg-gradient-end); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 12px; font-weight: bold; box-shadow: 0 0 8px var(--glow-color-1); opacity: 0; transform: scale(0.5); }
+        .slide-1.active-slide .spark { animation: sparkPulse 2.2s ease-out forwards; }
+        .slide-1 .spark-1 { top: calc(50% - 140px); left: calc(50% - 380px); content: '%'; animation-delay: 1.0s; }
+        .slide-1 .spark-2 { top: calc(50% - 140px); right: calc(50% - 380px); animation-delay: 1.2s; content: '🔥'; background: var(--accent1); box-shadow: 0 0 8px var(--glow-color-1);}
+        .slide-1 .spark-3 { bottom: calc(50% - 100px); right: calc(50% - 380px); animation-delay: 1.4s; content: '⏱️'; background: var(--accent3); box-shadow: 0 0 8px rgba(50, 205, 50, 0.7); }
+        .slide-1 .spark-4 { bottom: calc(50% - 100px); left: calc(50% - 280px); animation-delay: 1.6s; content: '★'; }
+        .slide-1 .spark-5 { top: 50%; right: calc(50% - 380px); animation-delay: 1.8s; font-size: 10px; content: 'NEW'; background: var(--accent2); box-shadow: 0 0 8px var(--glow-color-2);}
+        @keyframes sparkPulse { 0% { transform: scale(0.5); opacity: 0; } 50% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 15px var(--glow-color-1), 0 0 15px var(--glow-color-2); } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes assemblePulse { 0% { transform: scale(0.8); opacity: 0; } 70% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+        .slide-1 .main-title { font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 700; margin: 0 0 20px 0; text-align: center; background: linear-gradient(90deg, var(--accent1), var(--accent2)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; text-shadow: 0 0 10px var(--glow-color-1), 0 0 15px var(--glow-color-2); opacity: 0; transform: scale(0.9); }
+        .slide-1.active-slide .main-title { animation: fadeInScale 2s ease-out 0.8s forwards; }
+        .slide-1 .tagline { font-size: clamp(1rem, 2.5vw, 1.3rem); color: var(--tagline-color); letter-spacing: 1px; text-align: center; margin: 0; opacity: 0; transform: translateY(20px); }
+        .slide-1.active-slide .tagline { animation: slideUpFadeIn 1.8s ease-out 1.2s forwards; }
+
+        /* --- Slide 2: The Problem --- */
+        .slide-2 .background-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; background-image: url('https://source.unsplash.com/random/1200x800/?ecommerce,blur'); background-size: cover; background-position: center center; filter: blur(4px) grayscale(60%) brightness(0.7); }
+        .slide-2.active-slide .background-layer { animation: bgPanZoom 30s infinite alternate ease-in-out; }
+        @keyframes bgPanZoom { 0% { transform: scale(1) translateX(-2%); } 100% { transform: scale(1.05) translateX(2%); } }
+        .slide-2 .slide-content { max-width: 800px; padding: 40px; }
+        .slide-2 .slide-title { font-size: clamp(2rem, 6vw, 3.5rem); font-weight: 700; margin-bottom: 40px; color: var(--text-color); opacity: 0; transform: translateY(-30px); }
+        .slide-2.active-slide .slide-title { animation: slideDownFadeIn 1.8s ease-out 0.2s forwards; }
+        .slide-2 .problem-list { list-style: none; padding: 0; margin: 0; width: 100%; display: flex; flex-direction: column; gap: 20px; }
+        .slide-2 .problem-item { display: flex; align-items: center; text-align: left; font-size: clamp(1rem, 2.5vw, 1.2rem); line-height: 1.5; opacity: 0; transform: translateY(20px); padding: 15px; border-radius: 10px; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: var(--glass-neumorphic-shadow-lighter); transition: box-shadow 0.3s ease, transform 0.3s ease; margin-bottom: 0; }
+        .slide-2.active-slide .problem-item { animation: slideUpFadeInProblem 1.6s ease-out forwards; }
+        .slide-2 .problem-item:nth-child(1) { animation-delay: 0.6s; } .slide-2 .problem-item:nth-child(2) { animation-delay: 0.8s; } .slide-2 .problem-item:nth-child(3) { animation-delay: 1.0s; } .slide-2 .problem-item:nth-child(4) { animation-delay: 1.2s; }
+        @keyframes slideUpFadeInProblem { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .slide-2 .problem-item i.fas { font-size: 1.8em; color: var(--accent2); margin-right: 20px; width: 1.2em; text-align: center; flex-shrink: 0; }
+        .slide-2 .problem-item.result-item { font-weight: bold; color: var(--tagline-color); border-color: rgba(255, 107, 107, 0.4); }
+        .slide-2.active-slide .problem-item.result-item { animation: slideUpFadeInProblem 1.6s ease-out 1.2s forwards, pulseRed 2.5s ease-in-out 2.8s 2; }
+        .slide-2 .problem-item.result-item i.fas { color: #FF6B6B; }
+        @keyframes pulseRed { 0%, 100% { text-shadow: none; color: var(--tagline-color); } 50% { text-shadow: 0 0 10px #FF6B6B; color: var(--text-color); } }
+
+        /* --- Slide 3: Solution (Before/After) --- */
+        .slide-3 { background: radial-gradient(ellipse at bottom, #2a2a72 0%, #1f1f2e 100%); }
+        .slide-3 .slide-content { max-width: 1100px; }
+        .slide-3 .slide-title { font-size: clamp(1.8rem, 5vw, 2.8rem); font-weight: 700; margin-bottom: 10px; color: var(--text-color); opacity: 0; transform: translateY(-30px); }
+        .slide-3.active-slide .slide-title { animation: slideDownFadeIn 1.8s ease-out 0.2s forwards; }
+        .slide-3 .core-value-statement { font-size: clamp(1rem, 2.5vw, 1.2rem); color: var(--tagline-color); margin-bottom: 30px; max-width: 700px; opacity: 0; transform: translateY(-30px); }
+        .slide-3.active-slide .core-value-statement { animation: slideDownFadeIn 1.8s ease-out 0.4s forwards; }
+        .slide-3 .visual-showcase { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; width: 100%; margin-bottom: 40px; position: relative; align-items: start; /* Align items to top */ }
+        .slide-3 .showcase-container { position: relative; overflow: hidden; padding: 20px; /*min-height: 280px;*/ display: flex; justify-content: flex-start; /* Align content top */ align-items: center; flex-direction: column; text-align: center; background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)); -webkit-backdrop-filter: blur(var(--glass-blur)); border: var(--glass-border); border-radius: var(--glass-border-radius); box-shadow: var(--glass-neumorphic-shadow); transition: box-shadow 0.3s ease, transform 0.3s ease; }
+        .slide-3 .showcase-container:hover { transform: translateY(-3px); box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.25), -3px -3px 10px rgba(255, 255, 255, 0.07), inset 1px 1px 1px rgba(255, 255, 255, 0.08), inset -1px -1px 1px rgba(0, 0, 0, 0.12); }
+        .slide-3 .showcase-label { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); color: var(--tagline-color); padding: 3px 8px; font-size: 0.8rem; border-radius: 4px; z-index: 5; }
+        .slide-3 .product-image { /* MODIFIED: Increase max-height */
+            display: block;
+            max-width: 100%; /* Allow full width within container */
+            height: auto; /* Maintain aspect ratio */
+            max-height: 260px; /* Increased max-height */
+            border-radius: 6px;
+            position: relative;
+            object-fit: contain; /* Use contain to avoid cropping */
+            margin-bottom: 10px;
+            /* Removed border here, parent has one */
+        }
+        .slide-3 .before-container { opacity: 0; }
+        .slide-3.active-slide .before-container { animation: fadeIn 2s ease-out 0.6s forwards; }
+        .slide-3 .before-container .product-image { filter: grayscale(80%) brightness(0.7); }
+        .slide-3 .after-container { opacity: 0; transform: translateX(20px); position: relative; /* Needed for absolute positioned overlays */ }
+        .slide-3.active-slide .after-container { animation: revealAfter 2s ease-out 1.2s forwards; }
+        @keyframes revealAfter { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+        /* General overlay styles */
+        .overlay { position: absolute; padding: 6px 12px; /* Reduced padding slightly */ border-radius: 8px; font-size: clamp(0.75rem, 1.6vw, 0.9rem); /* Slightly smaller max font */ font-weight: 500; z-index: 3; opacity: 0; transform: scale(0.8); box-shadow: 0 3px 6px rgba(0,0,0,0.3); animation-name: popInOverlay; animation-fill-mode: forwards; animation-duration: 1.5s; animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); border: 1px solid rgba(255, 255, 255, 0.15); text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); background-color: var(--overlay-bg); color: var(--overlay-text); }
+        .slide.active-slide .overlay { animation-delay: calc(var(--card-delay, 0s) + 0.4s); }
+        /* MODIFIED: Increased corner offset */
+        .overlay-top-left { top: var(--overlay-offset); left: var(--overlay-offset); }
+        .overlay-top-right { top: var(--overlay-offset); right: var(--overlay-offset); }
+        .overlay-bottom-left { bottom: var(--overlay-offset); left: var(--overlay-offset); }
+        .overlay-bottom-right { bottom: var(--overlay-offset); right: var(--overlay-offset); }
+        .overlay-center { top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8); animation-name: popInOverlayCenter; }
+        /* Slide 3 Specific Overlay Styles */
+        .slide-3.active-slide .overlay { animation-delay: 1.8s; } /* Override general card delay */
+        .slide-3.active-slide .overlay.overlay-2 { animation-delay: 2.0s; }
+        .slide-3.active-slide .overlay.overlay-3 { animation-delay: 2.2s; }
+        .slide-3 .overlay-sale { background: var(--overlay-discount-bg); color: var(--overlay-text); }
+        .slide-3.active-slide .overlay-sale { animation: popIn 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 1.8s forwards, pulseGlow 3s infinite ease-in-out 3.2s; }
+        .slide-3 .overlay-stock { background-color: var(--overlay-low-stock-bg); color: var(--overlay-dark-text); }
+        .slide-3 .overlay-bestseller { background-color: var(--overlay-bestseller-bg); color: var(--overlay-dark-text); }
+        .slide-3 .overlay-timer { background-color: var(--overlay-timer-bg); color: var(--overlay-dark-text); }
+        @keyframes pulseGlow { 0%, 100% { box-shadow: 0 2px 5px rgba(0,0,0,0.3), 0 0 5px var(--glow-color-1); transform: scale(1); } 50% { box-shadow: 0 2px 8px rgba(0,0,0,0.4), 0 0 15px var(--glow-color-1); transform: scale(1.03); } }
+        .slide-3 .benefits-list { list-style: none; padding: 0; margin: 30px 0 0 0; /* Add margin top */ display: flex; justify-content: space-around; width: 100%; max-width: 900px; gap: 20px; flex-wrap: wrap; }
+        .slide-3 .benefit-item { display: flex; align-items: center; text-align: left; font-size: clamp(0.9rem, 2vw, 1.1rem); opacity: 0; transform: translateY(20px); padding: 10px 15px; border-radius: 10px; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: var(--glass-neumorphic-shadow-lighter); transition: box-shadow 0.3s ease, transform 0.3s ease; }
+        .slide-3.active-slide .benefit-item { animation: slideUpFadeInBenefit 1.6s ease-out forwards; }
+        .slide-3 .benefit-item:nth-child(1) { animation-delay: 2.4s; } .slide-3 .benefit-item:nth-child(2) { animation-delay: 2.6s; } .slide-3 .benefit-item:nth-child(3) { animation-delay: 2.8s; }
+        @keyframes slideUpFadeInBenefit { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .slide-3 .benefit-item i.fas { color: var(--accent3); font-size: 1.5em; margin-right: 10px; }
+        .slide-3 .theme-editor-cue { display: inline-block; width: 40px; height: 25px; border: 1px solid var(--tagline-color); border-radius: 3px; margin-left: 8px; position: relative; vertical-align: middle; background-color: rgba(255,255,255,0.1); overflow: hidden; }
+        .slide-3 .theme-editor-block { position: absolute; width: 15px; height: 10px; background-color: var(--accent2); border-radius: 2px; top: 5px; left: 3px; }
+        .slide-3.active-slide .theme-editor-block { animation: dragDropCue 3s ease-in-out infinite 3s; }
+        @keyframes dragDropCue { 0%, 100% { transform: translateX(0) scale(1); opacity: 1; } 40% { transform: translateX(15px) scale(1.1); opacity: 1; background-color: var(--accent1); } 50% { transform: translateX(15px) scale(1); opacity: 1; } 70% { transform: translateX(15px) scale(1); opacity: 1; background-color: var(--accent2); } }
+
+
+        /* --- Slide 4 & 5: Feature Powerhouse --- */
+        .slide-4, .slide-5 { background: linear-gradient(180deg, #252540 0%, var(--bg-gradient-end) 100%); }
+        .slide-4::before, .slide-5::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(45deg, rgba(0, 255, 255, 0.03) 25%, transparent 25%, transparent 75%, rgba(0, 255, 255, 0.03) 75%), linear-gradient(-45deg, rgba(255, 0, 255, 0.03) 25%, transparent 25%, transparent 75%, rgba(255, 0, 255, 0.03) 75%); background-size: 60px 60px; z-index: 1; opacity: 0; transition: opacity 1s ease 0.5s;}
+        .slide-4.active-slide::before, .slide-5.active-slide::before { opacity: 0.5; animation: bgLinesShift 40s linear infinite; }
+        @keyframes bgLinesShift { from { background-position: 0 0; } to { background-position: 120px 60px; } }
+        .slide-4 .slide-content, .slide-5 .slide-content { max-width: 1200px; }
+        .slide-4 .slide-title, .slide-5 .slide-title { font-size: clamp(2rem, 6vw, 3.5rem); font-weight: 700; margin-bottom: 40px; color: var(--text-color); opacity: 0; transform: translateY(-30px); }
+        .slide-4.active-slide .slide-title, .slide-5.active-slide .slide-title { animation: slideDownFadeIn 1.8s ease-out 0.2s forwards; }
+        .slide-4 .feature-columns, .slide-5 .feature-columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; width: 100%; margin-bottom: 40px; }
+        .slide-4 .feature-column, .slide-5 .feature-column { padding: 25px; text-align: center; opacity: 0; transform: translateY(30px); min-height: 340px; display: flex; flex-direction: column; justify-content: flex-start; background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)); -webkit-backdrop-filter: blur(var(--glass-blur)); border: var(--glass-border); border-radius: var(--glass-border-radius); box-shadow: var(--glass-neumorphic-shadow); transition: box-shadow 0.3s ease, transform 0.3s ease; }
+        .slide-4 .feature-column:hover, .slide-5 .feature-column:hover { transform: translateY(27px); box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.25), -3px -3px 10px rgba(255, 255, 255, 0.07), inset 1px 1px 1px rgba(255, 255, 255, 0.08), inset -1px -1px 1px rgba(0, 0, 0, 0.12); }
+        .slide-4.active-slide .feature-column, .slide-5.active-slide .feature-column { animation: slideUpFadeInColumn 1.7s ease-out forwards; }
+        .slide-4 .feature-column:nth-child(1), .slide-5 .feature-column:nth-child(1) { animation-delay: 0.5s; } .slide-4 .feature-column:nth-child(2), .slide-5 .feature-column:nth-child(2) { animation-delay: 0.7s; } .slide-4 .feature-column:nth-child(3), .slide-5 .feature-column:nth-child(3) { animation-delay: 0.9s; }
+        @keyframes slideUpFadeInColumn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .slide-4 .column-icon, .slide-5 .column-icon { font-size: 2.5rem; margin-bottom: 15px; display: inline-block; opacity: 0; transform: scale(0.5) rotate(-15deg); }
+        .slide-4.active-slide .column-icon, .slide-5.active-slide .column-icon { animation: popInIcon 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .slide-4 .feature-column:nth-child(1) .column-icon { animation-delay: 0.8s; color: var(--accent1); } .slide-4 .feature-column:nth-child(2) .column-icon { animation-delay: 1.0s; color: var(--accent3); } .slide-4 .feature-column:nth-child(3) .column-icon { animation-delay: 1.2s; color: var(--accent2); }
+        .slide-5 .feature-column:nth-child(1) .column-icon { animation-delay: 0.8s; color: #fcc419; } .slide-5 .feature-column:nth-child(2) .column-icon { animation-delay: 1.0s; color: #fab005; } .slide-5 .feature-column:nth-child(3) .column-icon { animation-delay: 1.2s; color: #15aabf; }
+        .slide-4 .column-title, .slide-5 .column-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 10px; color: var(--text-color); }
+        .slide-4 .column-description, .slide-5 .column-description { font-size: 0.95rem; color: var(--tagline-color); margin-bottom: 20px; line-height: 1.5; flex-grow: 1; }
+        .slide-4 .mini-overlay-container, .slide-5 .mini-overlay-container { display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; min-height: 60px; perspective: 500px; margin-top: auto; }
+        .slide-4 .mini-overlay, .slide-5 .mini-overlay { padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 500; display: inline-block; box-shadow: 0 2px 4px rgba(0,0,0,0.25); background-color: rgba(0,0,0,0.3); color: var(--overlay-text); opacity: 0; transform: rotateX(-90deg) scale(0.8); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border: 1px solid rgba(255, 255, 255, 0.1); text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); }
+        .slide-4.active-slide .mini-overlay, .slide-5.active-slide .mini-overlay { animation: flipInOverlay 1.6s ease-out forwards; }
+        /* Mini Overlay Staggering & Specific Styles */
+        .slide-4 .feature-column:nth-child(1) .mini-overlay:nth-of-type(1) { animation-delay: 1.1s; } .slide-4 .feature-column:nth-child(1) .mini-overlay:nth-of-type(2) { animation-delay: 1.2s; }
+        .slide-4 .feature-column:nth-child(2) .mini-overlay:nth-of-type(1) { animation-delay: 1.3s; } .slide-4 .feature-column:nth-child(2) .mini-overlay:nth-of-type(2) { animation-delay: 1.4s; }
+        .slide-4 .feature-column:nth-child(3) .mini-overlay:nth-of-type(1) { animation-delay: 1.5s; } .slide-4 .feature-column:nth-child(3) .mini-overlay:nth-of-type(2) { animation-delay: 1.6s; }
+        .slide-5 .feature-column:nth-child(1) .mini-overlay:nth-of-type(1) { animation-delay: 1.1s; } .slide-5 .feature-column:nth-child(1) .mini-overlay:nth-of-type(2) { animation-delay: 1.2s; } .slide-5 .feature-column:nth-child(1) .mini-overlay:nth-of-type(3) { animation-delay: 1.3s; }
+        .slide-5 .feature-column:nth-child(2) .mini-overlay:nth-of-type(1) { animation-delay: 1.4s; } .slide-5 .feature-column:nth-child(2) .mini-overlay:nth-of-type(2) { animation-delay: 1.5s; } .slide-5 .feature-column:nth-child(2) .reorder-bar-container { animation-delay: 1.6s; }
+        .slide-5 .feature-column:nth-child(3) .mini-overlay:nth-of-type(1) { animation-delay: 1.7s; } .slide-5 .feature-column:nth-child(3) .mini-overlay:nth-of-type(2) { animation-delay: 1.8s; } .slide-5 .feature-column:nth-child(3) .mini-overlay:nth-of-type(3) { animation-delay: 1.9s; }
+        .slide-4 .mini-overlay.timer { background-color: var(--overlay-timer-bg); color: var(--overlay-dark-text); }
+        .slide-4.active-slide .mini-overlay.timer { animation: flipInOverlay 1.6s ease-out 1.1s forwards, pulseGlowTimer 2.5s infinite ease-in-out 2.5s; }
+        .slide-4 .mini-overlay.stock { background-color: var(--overlay-low-stock-bg); color: var(--overlay-dark-text); }
+        .slide-4 .mini-overlay.bestseller { background-color: var(--overlay-bestseller-bg); color: var(--overlay-dark-text); }
+        .slide-4 .mini-overlay.sold { background-color: var(--overlay-bought-bg); color: var(--overlay-text); }
+        .slide-4 .mini-overlay.discount { background: var(--overlay-discount-bg); color: var(--overlay-text); }
+        .slide-4 .mini-overlay.new { background-color: var(--overlay-new-bg); color: var(--overlay-dark-text); }
+        @keyframes pulseGlowTimer { 0%, 100% { box-shadow: 0 1px 3px rgba(0,0,0,0.2), 0 0 4px var(--overlay-timer-bg); transform: scale(1); } 50% { box-shadow: 0 2px 6px rgba(0,0,0,0.3), 0 0 10px var(--overlay-timer-bg); transform: scale(1.05); } }
+        .slide-5 .mini-overlay.lowest-price { background-color: var(--overlay-lowest-price-bg); color: var(--overlay-dark-text); font-weight: bold; }
+        .slide-5 .mini-overlay.price-drop { background-color: var(--overlay-price-drop-bg); color: var(--overlay-dark-text); }
+        .slide-5 .mini-overlay.selling-fast { background: var(--overlay-selling-fast-bg); color: var(--overlay-text); }
+        .slide-5 .mini-overlay.reorder { background-color: var(--overlay-bestseller-bg); color: var(--overlay-dark-text); } /* Reuse bestseller */
+        .slide-5 .mini-overlay.custom-tag { background-color: var(--overlay-tag-bg); color: var(--overlay-text); }
+        .slide-5 .mini-overlay.staff-pick { background: linear-gradient(45deg, var(--accent1), var(--accent2)); }
+        .slide-5 .reorder-bar-container { display: flex; align-items: center; gap: 8px; margin-top: 10px; opacity: 0; transform: rotateX(-90deg) scale(0.8); width: fit-content; margin-left: auto; margin-right: auto; }
+        .slide-5.active-slide .reorder-bar-container { animation: flipInOverlay 1.6s ease-out 1.6s forwards; }
+        .slide-5 .reorder-bar { width: 80px; height: 8px; background-color: var(--reorder-bar-bg); border-radius: 4px; overflow: hidden; position: relative; backdrop-filter: blur(var(--glass-blur)); -webkit-backdrop-filter: blur(var(--glass-blur)); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .slide-5 .reorder-bar-fill { position: absolute; top: 0; left: 0; height: 100%; background-color: var(--reorder-bar-fill); border-radius: 4px; width: 0%; }
+        .slide-5.active-slide .reorder-bar-fill { animation: fillBar 2s ease-out 1.7s forwards; }
+        @keyframes fillBar { from { width: 0%; } to { width: 75%; } }
+        .slide-5 .reorder-bar-text { font-size: 0.8rem; color: var(--tagline-color); }
+        .slide-4 .powered-by-message, .slide-5 .bottom-message { font-size: 1rem; font-style: italic; color: var(--tagline-color); margin-top: 25px; opacity: 0; }
+        .slide-4.active-slide .powered-by-message { animation: fadeIn 2s ease-out 1.8s forwards; }
+        .slide-5.active-slide .bottom-message { animation: fadeIn 2s ease-out 2.0s forwards; }
+
+
+        /* --- Slides 6-9: Overlays in Action (Restructured) --- */
+        .slide-6, .slide-7, .slide-8, .slide-9 { background: radial-gradient(ellipse at top left, #2a2a72 0%, #1f1f2e 100%); }
+        .slide-6 .slide-content, .slide-7 .slide-content,
+        .slide-8 .slide-content, .slide-9 .slide-content { max-width: 1200px; }
+        .slide-6 .slide-title, .slide-7 .slide-title,
+        .slide-8 .slide-title, .slide-9 .slide-title { font-size: clamp(1.8rem, 5vw, 2.8rem); font-weight: 700; margin-bottom: 30px; color: var(--text-color); opacity: 0; transform: translateY(-30px); }
+        .slide.active-slide .slide-title { animation: slideDownFadeIn 1.8s ease-out 0.2s forwards; }
+
+        .visual-grid-two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; width: 100%; max-width: 900px; margin: 0 auto; }
+        .product-card { position: relative; overflow: hidden; opacity: 0; transform: translateY(30px) scale(0.95); background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)); -webkit-backdrop-filter: blur(var(--glass-blur)); border: var(--glass-border); border-radius: var(--glass-border-radius); box-shadow: var(--glass-neumorphic-shadow); transition: box-shadow 0.3s ease, transform 0.3s ease; }
+        .product-card:hover { transform: translateY(27px) scale(0.97); box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.25), -3px -3px 10px rgba(255, 255, 255, 0.07), inset 1px 1px 1px rgba(255, 255, 255, 0.08), inset -1px -1px 1px rgba(0, 0, 0, 0.12); }
+        .slide.active-slide .product-card { animation: zoomInCard 1.7s ease-out forwards; }
+         /* Staggering for the two cards per slide */
+        .slide.active-slide .product-card:nth-child(1) { animation-delay: 0.5s; --card-delay: 0.5s; }
+        .slide.active-slide .product-card:nth-child(2) { animation-delay: 0.7s; --card-delay: 0.7s; }
+        @keyframes zoomInCard { from { opacity: 0; transform: translateY(30px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        .product-image { display: block; width: 100%; height: 350px; object-fit: cover; border-bottom: var(--glass-border); }
+        /* Overlay styles already defined above, including increased offsets */
+        /* PRD Inspired Overlay Styles */
+        .overlay-discount { background: var(--overlay-discount-bg); color: var(--overlay-text); font-weight: bold; }
+        .overlay-new { background: var(--overlay-new-bg); color: var(--overlay-dark-text); }
+        .overlay-bought { background: var(--overlay-bought-bg); color: var(--overlay-text); }
+        .overlay-low-stock { background: var(--overlay-low-stock-bg); color: var(--overlay-dark-text); }
+        .overlay-bestseller { background: var(--overlay-bestseller-bg); color: var(--overlay-dark-text); font-weight: bold; }
+        .overlay-timer { background: var(--overlay-timer-bg); color: var(--overlay-dark-text); }
+        .overlay-selling-fast { background: var(--overlay-selling-fast-bg); color: var(--overlay-text); }
+        .overlay-exclusive { background: var(--overlay-exclusive-bg); color: var(--overlay-text); }
+        .overlay-sustainable { background: var(--overlay-sustainable-bg); color: var(--overlay-text); }
+        .overlay-natural { background: var(--overlay-natural-bg); color: var(--overlay-text); }
+        .overlay-tag { background: var(--overlay-tag-bg); color: var(--overlay-text); }
+        .overlay-lowest-price { background: var(--overlay-lowest-price-bg); color: var(--overlay-dark-text); font-weight: bold;}
+        .overlay-reorder { background: var(--overlay-reorder-bg); color: var(--overlay-text); }
+        .overlay-limited { background: var(--overlay-limited-bg); color: var(--overlay-text); }
+        .overlay-price-drop { background: var(--overlay-price-drop-bg); color: var(--overlay-dark-text); }
+
+        /* --- Slide 10: Technical Edge --- */
+        .slide-10 { background-color: #151820; background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px); background-size: 30px 30px; }
+        .slide-10 .slide-content { max-width: 1100px; }
+        .slide-10 .slide-title { font-size: clamp(2rem, 6vw, 3.5rem); font-weight: 700; margin-bottom: 40px; color: var(--text-color); opacity: 0; transform: translateY(-30px); }
+        .slide-10 .main-content-area { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; width: 100%; align-items: flex-start; }
+        .slide-10 .key-points-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 20px; }
+        .slide-10 .key-point-item { display: flex; align-items: flex-start; text-align: left; opacity: 0; transform: translateX(-20px); padding: 15px; border-radius: 10px; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: var(--glass-neumorphic-shadow-lighter); transition: box-shadow 0.3s ease, transform 0.3s ease; margin-bottom: 0; }
+        .slide-10.active-slide .key-point-item { animation: slideUpFadeInPoint 1.6s ease-out forwards; }
+        .slide-10 .key-point-item:nth-child(1) { animation-delay: 0.6s; } .slide-10 .key-point-item:nth-child(2) { animation-delay: 0.8s; } .slide-10 .key-point-item:nth-child(3) { animation-delay: 1.0s; } .slide-10 .key-point-item:nth-child(4) { animation-delay: 1.2s; } .slide-10 .key-point-item:nth-child(5) { animation-delay: 1.4s; }
+        @keyframes slideUpFadeInPoint { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+        .slide-10 .key-point-item i.fas { font-size: 1.5em; color: var(--accent2); margin-right: 15px; margin-top: 0.1em; width: 1.3em; text-align: center; flex-shrink: 0; }
+        .slide-10 .key-point-text strong { display: block; font-weight: 700; font-size: 1.1rem; margin-bottom: 3px; color: var(--text-color); }
+        .slide-10 .key-point-text span { font-size: 0.95rem; color: var(--tagline-color); line-height: 1.5; }
+        .slide-10 .key-point-text .highlight { color: var(--accent3); font-weight: 500; }
+        .slide-10 .mockups-area { display: flex; flex-direction: column; gap: 25px; perspective: 800px; }
+        .slide-10 .mockup { padding: 20px; position: relative; overflow: hidden; opacity: 0; transform: rotateX(15deg) scale(0.9); display: flex; align-items: center; justify-content: center; min-height: 180px; text-align: center; background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)); -webkit-backdrop-filter: blur(var(--glass-blur)); border: var(--glass-border); border-radius: var(--glass-border-radius); box-shadow: var(--glass-neumorphic-shadow); transition: box-shadow 0.3s ease, transform 0.3s ease; }
+        .slide-10 .mockup:hover { transform: rotateX(10deg) scale(0.92) translateY(-5px); }
+        .slide-10.active-slide .mockup { animation: revealMockup 1.8s ease-out forwards; }
+        .slide-10 .theme-editor-mockup { animation-delay: 0.7s; } .slide-10 .admin-panel-mockup { animation-delay: 1.3s; }
+        @keyframes revealMockup { from { opacity: 0; transform: rotateX(15deg) scale(0.9); } to { opacity: 1; transform: rotateX(0deg) scale(1); } }
+        .slide-10 .mockup .mockup-text { color: var(--tagline-color); font-style: italic; font-size: 0.9rem; }
+        .slide-10 .mockup::after { content: ''; position: absolute; top: -1px; left: -1px; right: -1px; bottom: -1px; border: 2px solid transparent; box-sizing: border-box; border-radius: var(--glass-border-radius); pointer-events: none; transition: border-color 0.3s ease, box-shadow 0.3s ease; z-index: 1; }
+        .slide-10.active-slide .mockup.theme-editor-mockup::after { animation: highlightUI 2s ease-in-out 2s 1 forwards; }
+        .slide-10.active-slide .mockup.admin-panel-mockup::after { animation: highlightUI 2s ease-in-out 2.6s 1 forwards; }
+        @keyframes highlightUI { 0%, 100% { border-color: transparent; box-shadow: none; } 50% { border-color: var(--accent2); box-shadow: 0 0 15px rgba(0, 255, 255, 0.5); } }
+        @media (max-width: 768px) { .slide-10 .main-content-area { grid-template-columns: 1fr; gap: 50px; } .slide-10 .mockups-area { order: -1; } }
+
+        /* --- Slide 11: Call to Action --- */
+        .slide-11 { background: radial-gradient(ellipse at center, #3a3a8a 0%, var(--bg-gradient-end) 80%); }
+        .slide-11 .slide-content { max-width: 900px; }
+        .slide-11 .particles-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; opacity: 0; }
+        .slide-11.active-slide .particles-container { animation: fadeIn 2s ease-out forwards, particleIntensity 10s ease-in-out infinite alternate 1s; }
+        .slide-11 .particle { position: absolute; width: 3px; height: 3px; background-color: var(--accent2); border-radius: 50%; opacity: 0; box-shadow: 0 0 6px var(--glow-color-2); }
+        .slide-11.active-slide .particle { animation: particle-animation 21s infinite linear; }
+        .slide-11.active-slide .particle:nth-child(2n) { animation-duration: 26s; } .slide-11.active-slide .particle:nth-child(3n) { animation-duration: 16s; }
+        @keyframes particleIntensity { 0% { opacity: 0.6; transform: scale(1); } 50% { opacity: 0.9; transform: scale(1.05); } 100% { opacity: 0.6; transform: scale(1); } }
+        .slide-11 .main-statement { font-size: clamp(2.5rem, 7vw, 4.5rem); font-weight: 800; line-height: 1.2; margin-bottom: 15px; color: var(--text-color); text-shadow: 0 0 8px var(--glow-color-1), 0 0 12px var(--glow-color-2); opacity: 0; transform: scale(0.7); }
+        .slide-11.active-slide .main-statement { animation: energeticBounce 2.2s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s forwards; }
+        @keyframes energeticBounce { 0% { transform: scale(0.7); opacity: 0; } 60% { transform: scale(1.1); opacity: 1; } 80% { transform: scale(0.95); } 100% { transform: scale(1); opacity: 1; } }
+        .slide-11 .app-name-final { font-size: clamp(1.8rem, 5vw, 3rem); font-weight: 700; margin-bottom: 30px; background: linear-gradient(90deg, var(--accent1), var(--accent2)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; opacity: 0; transform: scale(0.9); }
+        .slide-11.active-slide .app-name-final { animation: fadeInScale 2s ease-out 0.8s forwards; }
+        .slide-11 .recap-benefits { display: flex; justify-content: center; gap: 15px; margin-bottom: 35px; flex-wrap: wrap; }
+        .slide-11 .benefit { color: var(--tagline-color); font-size: clamp(0.9rem, 2.5vw, 1.1rem); font-weight: 500; padding: 8px 12px; position: relative; opacity: 0; transform: scale(1.5) rotate(-5deg); border-radius: 8px; margin: 0; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: var(--glass-neumorphic-shadow-lighter); transition: box-shadow 0.3s ease, transform 0.3s ease; }
+        .slide-11.active-slide .benefit { animation: stampIn 1.5s ease-out forwards; }
+        .slide-11 .benefit:nth-child(1) { animation-delay: 1.2s; } .slide-11 .benefit:nth-child(2) { animation-delay: 1.4s; } .slide-11 .benefit:nth-child(3) { animation-delay: 1.6s; }
+        .slide-11 .benefit:not(:last-child)::after { content: ''; margin-left: 5px; font-weight: 400; }
+        @keyframes stampIn { from { opacity: 0; transform: scale(1.5) rotate(-5deg); } to { opacity: 1; transform: scale(1) rotate(0deg); } }
+        .slide-11 .sneak-peek { font-size: 1.1rem; font-style: italic; color: var(--accent3); margin-bottom: 40px; opacity: 0; text-shadow: none; }
+        .slide-11.active-slide .sneak-peek { animation: shimmer 3s ease-in-out 1.8s forwards; }
+        @keyframes shimmer { 0% { opacity: 0; text-shadow: none; } 30% { opacity: 1; text-shadow: 0 0 8px var(--accent3); } 100% { opacity: 1; text-shadow: none; } }
+        .slide-11 .cta-button { display: inline-block; padding: 15px 35px; font-size: 1.2rem; font-weight: 700; color: var(--cta-text); background: var(--cta-bg); border: none; border-radius: 50px; cursor: pointer; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.3), inset 1px 1px 2px rgba(255, 255, 255, 0.2), inset -1px -1px 2px rgba(0, 0, 0, 0.2); transition: all 0.3s ease; opacity: 0; transform: scale(0.9); text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4); }
+        .slide-11.active-slide .cta-button { animation: popInCTA 1.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 2.2s forwards, pulseCTA 2.8s infinite ease-in-out 3s; }
+        .slide-11 .cta-button:hover, .slide-11 .cta-button:focus { transform: scale(1.03) translateY(-2px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 0 10px var(--glow-color-1), 0 0 10px var(--glow-color-2), inset 1px 1px 1px rgba(255, 255, 255, 0.15), inset -1px -1px 1px rgba(0, 0, 0, 0.15); background: linear-gradient(90deg, rgba(255, 0, 255, 0.9), rgba(0, 255, 255, 0.9)); }
+        @keyframes popInCTA { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        @keyframes pulseCTA { 0%, 100% { transform: scale(1) translateY(0); } 50% { transform: scale(1.03) translateY(-2px); } }
+
+        /* Footer Fade In */
+        .slide.active-slide .slide-footer { animation: fadeInFooter 2s ease-out 2.5s forwards; }
+
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+
+        <!-- Slide 1: Title & Hook (Unchanged) -->
+        <div class="slide slide-1">
+            <div class="particles-container" id="particles-js-1"></div>
+            <div class="slide-content">
+                <div class="visual-element">
+                    <div class="frame">
+                        <h1 class="main-title">Kwik Discovery</h1>
+                        <p class="tagline">Turn Product Images into Conversion Engines.</p>
+                    </div>
+                    <div class="spark spark-1">%</div>
+                    <div class="spark spark-2">🔥</div>
+                    <div class="spark spark-3">⏱️</div>
+                    <div class="spark spark-4">★</div>
+                    <div class="spark spark-5">NEW</div>
+                </div>
+            </div>
+            <footer class="slide-footer footer-right">Kwik Discovery Demo - Garvit Burad</footer>
+        </div>
+
+        <!-- Slide 2: The Problem (Unchanged) -->
+        <div class="slide slide-2">
+            <div class="background-layer"></div>
+            <div class="slide-content">
+                <h1 class="slide-title">The Silent Conversion Killer</h1>
+                <ul class="problem-list"> <li class="problem-item"><i class="fas fa-eye-slash fa-fw"></i> <span><strong>Static Images Ignored:</strong> Shoppers scroll past vital info.</span></li> <li class="problem-item"><i class="fas fa-mouse-pointer fa-fw"></i> <span><strong>Hidden Value Requires Clicks:</strong> Sales, stock, popularity buried on product pages.</span></li> <li class="problem-item"><i class="fas fa-stopwatch fa-fw"></i> <span><strong>Manual Urgency is Tedious:</strong> Inconsistent, time-consuming to update badges/sales.</span></li> <li class="problem-item result-item"><i class="fas fa-cart-arrow-down fa-fw"></i> <span><strong>Result: Lost Sales & Engagement.</strong></span></li> </ul>
+            </div>
+             <footer class="slide-footer footer-right">Kwik Discovery Demo - Garvit Burad</footer>
+        </div>
+
+        <!-- Slide 3: Solution (Before/After) (Modified Image Size) -->
+        <div class="slide slide-3">
+            <div class="slide-content">
+                <h1 class="slide-title">Introducing Kwik Discovery: Dynamic Overlays, Effortlessly.</h1>
+                <p class="core-value-statement">We transform static product images into <strong>dynamic, data-driven communicators</strong> that capture attention and drive action.</p>
+                <div class="visual-showcase">
+                    <div class="showcase-container before-container">
+                        <img src="https://www.gonoise.com/cdn/shop/files/9_2c2c6fb0-1030-40ff-8bd3-28abacf70012.webp?v=1744820194" alt="Static Product Image - Smartwatch" class="product-image">
+                        <div style="text-align: center; color: var(--tagline-color); margin-top: 10px; font-weight: bold;">BEFORE</div>
+                     </div>
+                    <div class="showcase-container after-container">
+                         <img src="https://www.gonoise.com/cdn/shop/files/9_2c2c6fb0-1030-40ff-8bd3-28abacf70012.webp?v=1744820194" alt="Product Image with Overlays - Smartwatch" class="product-image">
+                         <div style="text-align: center; color: var(--tagline-color); margin-top: 10px; font-weight: bold;">AFTER (with Kwik Discovery)</div>
+                        <div class="overlay overlay-top-left overlay-bestseller">Best Seller</div>
+                        <div class="overlay overlay-top-right overlay-stock overlay-2">Only 5 Left!</div>
+                        <div class="overlay overlay-bottom-left overlay-timer overlay-3">Ends in 2:15:30</div>
+                        <div class="overlay overlay-bottom-right overlay-sale">20% OFF</div>
+                    </div>
+                </div>
+                <ul class="benefits-list"> <li class="benefit-item"><i class="fas fa-check-circle"></i> <span>OS 2.0 Native: Simple Drag & Drop<div class="theme-editor-cue" title="Simulated Theme Editor Drag & Drop"><div class="theme-editor-block"></div></div></span></li> <li class="benefit-item"><i class="fas fa-check-circle"></i> <span>Rules Engine: Automate Scarcity & Urgency</span></li> <li class="benefit-item"><i class="fas fa-check-circle"></i> <span>Fully Customizable: Match Your Brand</span></li> </ul>
+            </div>
+             <footer class="slide-footer footer-right">Kwik Discovery Demo - Garvit Burad</footer>
+        </div>
+
+        <!-- Slide 4: Feature Powerhouse 1 (Unchanged) -->
+        <div class="slide slide-4">
+             <div class="slide-content">
+                <h1 class="slide-title">Your Marketing Arsenal, Amplified</h1>
+                <div class="feature-columns"> <div class="feature-column"> <i class="fas fa-fire-alt column-icon"></i> <h2 class="column-title">Urgency & Scarcity</h2> <p class="column-description">Drive immediate action by highlighting limited availability and time-sensitive offers.</p> <div class="mini-overlay-container"> <div class="mini-overlay timer">Ends Soon!</div> <div class="mini-overlay stock">Only 3 Left!</div> </div> </div> <div class="feature-column"> <i class="fas fa-users column-icon"></i> <h2 class="column-title">Social Proof & Trust</h2> <p class="column-description">Build confidence and leverage popularity metrics to encourage purchases.</p> <div class="mini-overlay-container"> <div class="mini-overlay bestseller">Top 10!</div> <div class="mini-overlay sold">25+ Sold Today</div> </div> </div> <div class="feature-column"> <i class="fas fa-tags column-icon"></i> <h2 class="column-title">Value & Info</h2> <p class="column-description">Clearly communicate savings, key attributes, and product status at a glance.</p> <div class="mini-overlay-container"> <div class="mini-overlay discount">Save 20%</div> <div class="mini-overlay new">New!</div> </div> </div> </div>
+                <p class="powered-by-message">Powered by Real-Time Shopify Data & Smart Analytics</p>
+            </div>
+             <footer class="slide-footer footer-right">Kwik Discovery Demo - Garvit Burad</footer>
+        </div>
+
+         <!-- Slide 5: Feature Powerhouse 2 (Unchanged) -->
+        <div class="slide slide-5">
+             <div class="slide-content">
+                <h1 class="slide-title">Data-Driven Insights & Custom Tags</h1>
+                <div class="feature-columns"> <div class="feature-column"> <i class="fas fa-dollar-sign column-icon"></i> <h2 class="column-title">Historical Price Insights</h2> <p class="column-description">Automatically highlight lowest prices or recent drops based on tracked historical data.</p> <div class="mini-overlay-container"> <div class="mini-overlay lowest-price">Lowest Price Ever!</div> <div class="mini-overlay price-drop">Price Just Dropped!</div> <div class="mini-overlay lowest-price">Lowest in 90 Days</div> </div> </div> <div class="feature-column"> <i class="fas fa-chart-line column-icon"></i> <h2 class="column-title">Velocity & Loyalty Signals</h2> <p class="column-description">Showcase fast-selling items and products customers love enough to buy again.</p> <div class="mini-overlay-container"> <div class="mini-overlay selling-fast">Selling Fast! 🔥</div> <div class="mini-overlay reorder">High Demand</div> <div class="reorder-bar-container"> <span class="reorder-bar-text">75% Reorder</span> <div class="reorder-bar"><div class="reorder-bar-fill"></div></div> </div> </div> </div> <div class="feature-column"> <i class="fas fa-tags column-icon"></i> <h2 class="column-title">Custom Attribute Tags</h2> <p class="column-description">Display overlays based on your specific product tags or metafield data.</p> <div class="mini-overlay-container"> <div class="mini-overlay custom-tag">Organic Cotton</div> <div class="mini-overlay custom-tag">Vegan Certified</div> <div class="mini-overlay staff-pick">Staff Pick ✨</div> </div> </div> </div>
+                <p class="bottom-message">Unlock Powerful Automated Merchandising</p>
+            </div>
+             <footer class="slide-footer footer-right">Kwik Discovery Demo - Garvit Burad</footer>
+        </div>
+
+        <!-- Slide 6: Overlays in Action (Set 1 - Modified Overlays Spacing) -->
+        <div class="slide slide-6">
+             <div class="slide-content">
+                <h1 class="slide-title">Overlays: Discounts & New Arrivals</h1>
+                <div class="visual-grid-two">
+                    <div class="product-card">
+                        <img src="https://www.andindia.com/dw/image/v2/BGCX_PRD/on/demandware.static/-/Sites-masterCatalog_ANDIndia/default/dw06fc5706/images/hires/SS22/S25P47DRP76_AQU-GRN%20(11).jpg?sw=1300&sh=1950&sm=fit&strip=false" alt="AND Dress - Sale" class="product-image">
+                        <div class="overlay overlay-bottom-left overlay-discount">Save Rs500 (15%)</div>
+                        <div class="overlay overlay-top-right overlay-new">Spring Collection</div>
+                        <div class="overlay overlay-top-left overlay-low-stock">Only 3 Left!</div>
+                    </div>
+                    <div class="product-card">
+                        <img src="https://plumgoodness.com/cdn/shop/files/OatMineralSPF1stTile.webp?v=1742471418&width=900" alt="Plum Sunscreen" class="product-image">
+                        <div class="overlay overlay-top-left overlay-new">Just In!</div>
+                        <div class="overlay overlay-bottom-right overlay-bought">50+ Bought Last 24h</div>
+                         <div class="overlay overlay-bottom-left overlay-tag">SPF 50+ PA+++</div>
+                    </div>
+                </div>
+            </div>
+             <footer class="slide-footer footer-right">Kwik Discovery Demo - Garvit Burad</footer>
+        </div>
+
+       <!-- Slide 7: Overlays in Action (Set 2 - Modified Overlays Spacing) -->
+       <div class="slide slide-7">
+            <div class="slide-content">
+               <h1 class="slide-title">Overlays: Scarcity & Social Proof</h1>
+               <div class="visual-grid-two">
+                    <div class="product-card">
+                        <img src="https://www.nishhair.com/cdn/shop/products/IMG_6416.jpg?v=1678451597" alt="Nish Hair Extensions" class="product-image">
+                        <div class="overlay overlay-top-right overlay-low-stock">Only 2 Left!</div>
+                        <div class="overlay overlay-bottom-left overlay-natural">100% Natural Hair</div>
+                        <div class="overlay overlay-top-left overlay-bestseller">Top Seller</div>
+                    </div>
+                    <div class="product-card">
+                        <img src="https://i.mscwlns.co/media/misc/pdp_rcl/2024424/Creatine%20Gummies_l3es7z.png?tr=w-500,c-at_max" alt="Creatine Gummies" class="product-image">
+                        <div class="overlay overlay-top-right" style="background-color: #15aabf; color: white; font-weight: bold; padding: 8px 12px; font-size: 0.95rem;">75% Reorder Rate
+                            <div style="width: 100%; height: 8px; background-color: rgba(255,255,255,0.3); border-radius: 4px; margin-top: 5px; overflow: hidden;">
+                                <div style="width: 75%; height: 100%; background-color: #32CD32; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                        <div class="overlay overlay-top-left overlay-selling-fast">Selling Fast! 🔥</div>
+                        <div class="overlay overlay-bottom-right overlay-discount">10% Off Today</div>
+                        <div class="overlay overlay-bottom-left overlay-tag">Sugar Free</div>
+                    </div>
+               </div>
+           </div>
+            <footer class="slide-footer footer-right">Kwik Discovery Demo - Garvit Burad</footer>
+       </div>
+
+       <!-- Slide 8: Overlays in Action (Set 3 - Modified Overlays Spacing) -->
+       <div class="slide slide-8">
+            <div class="slide-content">
+               <h1 class="slide-title">Overlays: Limited Time & Exclusivity</h1>
+               <div class="visual-grid-two">
+                   <div class="product-card">
+                       <img src="https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1745060506_8255110.jpg?format=webp&w=480&dpr=2.0" alt="Souled Store Hoodie" class="product-image">
+                       <div class="overlay overlay-bottom-left overlay-limited">Limited Edition</div>
+                       <div class="overlay overlay-top-right overlay-new">Just Launched</div>
+                       <div class="overlay overlay-top-left overlay-timer">Ends Sunday!</div>
+                   </div>
+                   <div class="product-card">
+                       <img src="https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1734352570_5839236.jpg?format=webp&w=480&dpr=2.0" alt="Souled Store T-shirt" class="product-image">
+                       <div class="overlay overlay-top-left overlay-exclusive">Exclusive Design</div>
+                       <div class="overlay overlay-bottom-right overlay-discount">Flat 30% Off</div>
+                       <div class="overlay overlay-bottom-left overlay-bought">100+ Bought Last 7 Days</div>
+                   </div>
+               </div>
+           </div>
+            <footer class="slide-footer footer-right">Kwik Discovery Demo - Garvit Burad</footer>
+       </div>
+
+        <!-- Slide 9: Overlays in Action (Set 4 - Modified Overlays Spacing) -->
+       <div class="slide slide-9">
+            <div class="slide-content">
+               <h1 class="slide-title">Overlays: Value & Loyalty</h1>
+               <div class="visual-grid-two">
+                   <div class="product-card">
+                       <img src="https://www.andindia.com/dw/image/v2/BGCX_PRD/on/demandware.static/-/Sites-masterCatalog_ANDIndia/default/dw2cc55d1a/images/hires/SS22/S25P30DRP46_blue_prt%20(6)%20copy.jpg?sw=1300&sh=1950&sm=fit&strip=false" alt="AND Dress - Sustainable" class="product-image">
+                       <div class="overlay overlay-top-right overlay-low-stock">Last Few Left!</div>
+                       <div class="overlay overlay-bottom-left overlay-sustainable">Sustainable Fabric</div>
+                       <div class="overlay overlay-top-left overlay-lowest-price">Lowest Price in 30 Days</div>
+                   </div>
+                   <div class="product-card">
+                       <img src="https://levi.in/cdn/shop/files/2db63ae77a5631428a0eb5a7643af139.jpg?v=1742305544" alt="Levi's Jeans" class="product-image">
+                       <div class="overlay overlay-top-left overlay-bestseller">Store Best Seller</div>
+                       <div class="overlay overlay-bottom-right overlay-reorder">45% Reorder Rate</div>
+                       <div class="overlay overlay-bottom-left overlay-tag">Classic Fit</div>
+                   </div>
+               </div>
+           </div>
+            <footer class="slide-footer footer-right">Kwik Discovery Demo - Garvit Burad</footer>
+       </div>
+
+       <!-- Slide 7: Ecosystem Today -->
+       <div class="slide slide-7">
+           <div class="slide-content">
+               <h1 class="slide-title">The GoKwik Ecosystem</h1>
+               <p class="headline">Powerful Modules, Smarter Commerce</p>
+               <div class="ecosystem-diagram">
+                   <div class="module-item">
+                       <i class="fas fa-tags module-icon"></i>
+                       <h3 class="module-title">Discount Module</h3>
+                       <p class="module-desc">Defines complex cart/product promotions.</p>
+                   </div>
+                   <div class="module-item">
+                       <i class="fas fa-shopping-cart module-icon"></i>
+                       <h3 class="module-title">Side-Cart</h3>
+                       <p class="module-desc">Dynamic summary & upsell prompts.</p>
+                   </div>
+                   <div class="module-item">
+                       <i class="fas fa-credit-card module-icon"></i>
+                       <h3 class="module-title">Checkout</h3>
+                       <p class="module-desc">Seamless, auto-applies best offers.</p>
+                   </div>
+                    <div class="module-item">
+                       <i class="fas fa-user-plus module-icon"></i>
+                       <h3 class="module-title">Marketing Popup</h3>
+                       <p class="module-desc">Captures leads, enables personalization.</p>
+                   </div>
+               </div>
+               <p class="gap-text">...but promotion discovery happens too late.</p>
+           </div>
+            <footer class="slide-footer footer-right">Kwik Discovery Demo - Garvit Burad</footer>
+       </div>
+
+       <!-- Slide 8: Introducing Kwik Discovery -->
+       <div class="slide slide-8">
+            <div class="slide-content">
+               <h1 class="slide-title">Kwik Discovery Overlays</h1>
+                <p class="headline">Bridging Discovery & Deals Instantly</p>
+               <p class="core-concept">The visual layer translating GoKwik's power into glanceable messages on your storefront.</p>
+               <div class="visual-highlight-grid">
+                    <div class="product-card-visual">
+                        <img src="https://www.themancompany.com/cdn/shop/files/setof4-lifestyle_765x.jpg?v=1719491590" alt="Product Example 1" class="product-image-visual">
+                        <div class="overlay-visual ov1">Sale Ends Soon!</div>
+                    </div>
+                    <div class="product-card-visual">
+                        <img src="https://cdn.shopify.com/s/files/1/0272/5065/5367/files/mens-code-cotton-rich-t-shirts-sunshine-yellow-lookshot-4_360x.webp?v=1744453206" alt="Product Example 2" class="product-image-visual">
+                        <div class="overlay-visual ov2">Buy 2, Get 10%</div>
+                    </div>
+                    <div class="product-card-visual">
+                        <img src="https://82e.com/cdn/shop/files/Ashwagandha_50ml.png?v=1738325618&width=650" alt="Product Example 3" class="product-image-visual">
+                         <div class="overlay-visual ov3">VIP Price: $49</div>
+                    </div>
+                    <div class="product-card-visual">
+                        <img src="https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1716790915_4200014.png?format=webp&w=800&dpr=2.0" alt="Product Example 4" class="product-image-visual">
+                         <div class="overlay-visual ov4">Only 3 Left!</div>
+                    </div>
+               </div>
+                <p class="key-function">Translates complex rules & real-time data into actionable messages.</p>
+           </div>
+            <footer class="slide-footer footer-right">Kwik Discovery Demo - Garvit Burad</footer>
+       </div>
+
+       <!-- Slide 9: Ecosystem Synergy -->
+       <div class="slide slide-9">
+           <div class="slide-content">
+               <h1 class="slide-title">Ecosystem Synergy</h1>
+               <span class="scenario-example">Scenario: "Buy 3 specific items, Get 20% Off"</span>
+               <div class="synergy-flow">
+                   <div class="flow-step">
+                       <i class="fas fa-cogs flow-icon"></i>
+                       <div class="flow-text"><strong>1. Define Rule:</strong> Merchant sets "Buy 3, Get 20%" in GoKwik Discount Module.</div>
+                   </div>
+                    <div class="flow-step">
+                       <i class="fas fa-eye flow-icon"></i>
+                       <div class="flow-text"><strong>2. Display Overlay:</strong> Kwik Discovery shows on eligible items: <span class="highlight-text">"Add 2 more for 20% Off!"</span></div>
+                   </div>
+                    <div class="flow-step">
+                       <i class="fas fa-cart-plus flow-icon"></i>
+                       <div class="flow-text"><strong>3. Guide via Side-Cart:</strong> After 2nd item added, side-cart prompts: <span class="highlight-text">"Add 1 more for 20% Off!"</span></div>
+                   </div>
+                    <div class="flow-step">
+                       <i class="fas fa-check-double flow-icon"></i>
+                       <div class="flow-text"><strong>4. Fulfill at Checkout:</strong> GoKwik Checkout auto-applies 20% discount. No codes needed.</div>
+                   </div>
+                   <div class="flow-step"> <!-- Optional -->
+                       <i class="fas fa-user-tag flow-icon"></i>
+                       <div class="flow-text"><strong>5. Personalize (Optional):</strong> Logged-in VIP sees overlay: <span class="highlight-text">"VIP: Buy 3, Get 25% Off!"</span></div>
+                   </div>
+               </div>
+           </div>
+            <footer class="slide-footer footer-right">Kwik Discovery Demo - Garvit Burad</footer>
+       </div>
+
+       <!-- Slide 10: GoKwik Advantage -->
+       <div class="slide slide-10">
+            <div class="slide-content">
+               <h1 class="slide-title">The GoKwik Advantage</h1>
+                <p class="headline">Unified Power, Unmatched Results</p>
+               <div class="comparison-columns">
+                   <div class="comparison-column">
+                       <i class="fas fa-tags column-icon"></i>
+                       <h3 class="column-title">Standalone Discounts</h3>
+                       <ul class="pros-cons-list">
+                           <li class="pros">Powerful logic</li>
+                           <li class="cons">Hidden until cart</li>
+                           <li class="cons">Manual discovery</li>
+                           <li class="cons">Potential confusion</li>
+                       </ul>
+                   </div>
+                   <div class="comparison-column">
+                       <i class="fas fa-image column-icon"></i>
+                        <h3 class="column-title">Standalone Overlays</h3>
+                       <ul class="pros-cons-list">
+                            <li class="pros">Visual discovery</li>
+                            <li class="cons">Manual setup</li>
+                            <li class="cons">Sync issues</li>
+                            <li class="cons">Inaccurate offers risk</li>
+                       </ul>
+                   </div>
+                   <div class="comparison-column">
+                       <i class="fas fa-rocket column-icon"></i>
+                       <h3 class="column-title">GoKwik Integrated</h3>
+                        <ul class="benefits-list">
+                            <li>Instant Discovery</li>
+                            <li>Accurate Messaging</li>
+                            <li>Guided Upsell</li>
+                            <li>Seamless Fulfillment</li>
+                            <li>Reduced Friction</li>
+                            <li>Higher AOV & Conversion</li>
+                        </ul>
+                   </div>
+               </div>
+           </div>
+            <footer class="slide-footer footer-right">Kwik Discovery Demo - Garvit Burad</footer>
+       </div>
+
+       <!-- Slide 11: Data Loop -->
+       <div class="slide slide-11">
+            <div class="slide-content">
+               <h1 class="slide-title">Close the Loop</h1>
+                <p class="headline">Data-Driven Promotion Strategy</p>
+               <div class="data-loop-container">
+                   <div class="diagram-placeholder">
+                        <span class="diagram-text">Define → Display → Track → Measure → Analyze → Refine</span>
+                   </div>
+                   <div class="analytics-points">
+                       <div class="analytics-point"><i class="fas fa-eye analytics-icon"></i> <span class="analytics-text">Track Overlay Views/Clicks</span></div>
+                        <div class="analytics-point"><i class="fas fa-chart-pie analytics-icon"></i> <span class="analytics-text">Measure Conversion & AOV Lift</span></div>
+                        <div class="analytics-point"><i class="fas fa-trophy analytics-icon"></i> <span class="analytics-text">Identify Top Performing Rules</span></div>
+                        <div class="analytics-point"><i class="fas fa-vials analytics-icon"></i> <span class="analytics-text">A/B Test Variations (Future)</span></div>
+                   </div>
+                   <p class="final-benefit">Continuously improve effectiveness with real performance data.</p>
+                </div>
+           </div>
+            <footer class="slide-footer footer-right">Kwik Discovery Demo - Garvit Burad</footer>
+       </div>
+
+       <!-- Slide 10: Technical Edge (Unchanged) -->
+        <div class="slide slide-10">
+             <div class="slide-content">
+                <h1 class="slide-title">Seamless, Smart, Scalable</h1>
+                <div class="main-content-area">
+                    <ul class="key-points-list"> <li class="key-point-item"> <i class="fas fa-puzzle-piece fa-fw"></i> <div class="key-point-text"> <strong>Native OS 2.0 App Block</strong> <span>Flawless theme integration via App Blocks. <span class="highlight">No code needed.</span></span> </div> </li> <li class="key-point-item"> <i class="fas fa-rocket fa-fw"></i> <div class="key-point-text"> <strong>Performance First</strong> <span>Minimal footprint, async loading. Won't slow your store.</span> </div> </li> <li class="key-point-item"> <i class="fas fa-brain fa-fw"></i> <div class="key-point-text"> <strong>Intelligent Rules Engine</strong> <span>Precise Targeting (Products, Collections, Tags) & Priority Control.</span> </div> </li> <li class="key-point-item"> <i class="fas fa-palette fa-fw"></i> <div class="key-point-text"> <strong>Intuitive Admin Panel</strong> <span>Easy setup & customization via familiar Shopify Polaris components.</span> </div> </li> <li class="key-point-item"> <i class="fas fa-cloud-sync-alt fa-fw"></i> <div class="key-point-text"> <strong>Reliable & Up-to-Date</strong> <span>Background data sync ensures relevant overlays (Data freshness noted in UI).</span> </div> </li> </ul>
+                    <div class="mockups-area"> <div class="mockup theme-editor-mockup"> <span class="mockup-text">Theme Editor Mockup<br>(App Block Added)</span> </div> <div class="mockup admin-panel-mockup"> <span class="mockup-text">Admin Panel Mockup<br>(Rule Configuration UI)</span> </div> </div>
+                </div>
+            </div>
+             <footer class="slide-footer footer-right">Kwik Discovery Demo - Garvit Burad</footer>
+        </div>
+
+        <!-- Slide 11: Call to Action (Unchanged) -->
+        <div class="slide slide-11">
+             <div class="particles-container" id="particles-js-11"></div>
+            <div class="slide-content">
+                <h1 class="main-statement">Stop Browsing. Start Converting.</h1>
+                <h2 class="app-name-final">Kwik Discovery</h2>
+                <div class="recap-benefits"> <span class="benefit">Boost Engagement</span> <span class="benefit">Drive Urgency</span> <span class="benefit">Maximize Conversions</span> </div>
+                <p class="sneak-peek">Coming Soon: A/B Testing & Conversion Analytics!</p>
+                <a href="#" class="cta-button">Q & A / Find Us!</a>
+            </div>
+            <footer class="slide-footer footer-center">Garvit Burad | Kwik Discovery Demo Link</footer>
+        </div>
+
+    </div><!-- End Presentation Container -->
+
+    <!-- Navigation Buttons (Unchanged HTML) -->
+    <div class="slide-navigation">
+        <button id="prev-slide" class="nav-button" title="Previous Slide"><i class="fas fa-chevron-left"></i></button>
+        <button id="next-slide" class="nav-button" title="Next Slide"><i class="fas fa-chevron-right"></i></button>
+    </div>
+
+    <!-- JS (Unchanged) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.presentation-container .slide');
+            const prevButton = document.getElementById('prev-slide');
+            const nextButton = document.getElementById('next-slide');
+            let currentSlideIndex = 0;
+            const totalSlides = slides.length;
+
+            function showSlide(index) {
+                if (index < 0 || index >= totalSlides) {
+                    console.warn("Slide index out of bounds:", index);
+                    return;
+                }
+
+                const currentActive = document.querySelector('.slide.active-slide');
+                if (currentActive) {
+                    currentActive.classList.remove('active-slide');
+                     // Scroll slide content to top when changing slide
+                     if (currentActive.querySelector('.slide-content')) {
+                         currentActive.scrollTop = 0;
+                     }
+                }
+
+                slides[index].classList.add('active-slide');
+                 // Scroll new slide content to top
+                 if (slides[index].querySelector('.slide-content')) {
+                    slides[index].scrollTop = 0;
+                 }
+                currentSlideIndex = index;
+
+                prevButton.disabled = currentSlideIndex === 0;
+                nextButton.disabled = currentSlideIndex === totalSlides - 1;
+
+                 triggerParticlesForSlide(slides[index]);
+            }
+
+            function triggerParticlesForSlide(activeSlide) {
+                 const particlesContainerId = activeSlide.querySelector('.particles-container')?.id;
+                 if (!particlesContainerId) return;
+
+                 if (activeSlide.classList.contains('slide-1')) {
+                    generateParticles(particlesContainerId, 20);
+                 } else if (activeSlide.classList.contains('slide-11')) {
+                     generateParticles(particlesContainerId, 30);
+                 }
+            }
+
+             function generateParticles(containerId, numParticles) {
+                 const particlesContainer = document.getElementById(containerId);
+                 if (!particlesContainer) return;
+
+                 if (particlesContainer.children.length > 0 && particlesContainer.dataset.generated === 'true') {
+                     return;
+                 }
+
+                 particlesContainer.innerHTML = '';
+                 particlesContainer.dataset.generated = 'true';
+
+                for (let i = 0; i < numParticles; i++) {
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+                    const xStart = Math.random() * 100; const yStart = Math.random() * 100;
+                    const xEnd = Math.random() * 100; const yEnd = Math.random() * 100;
+                    const top = Math.random() * 100; const left = Math.random() * 100;
+                    const delay = Math.random() * 3;
+
+                    particle.style.setProperty('--x-start', `${xStart}vw`); particle.style.setProperty('--y-start', `${yStart}vh`);
+                    particle.style.setProperty('--x-end', `${xEnd}vw`); particle.style.setProperty('--y-end', `${yEnd}vh`);
+                    particle.style.top = `${top}%`; particle.style.left = `${left}%`;
+                    particle.style.animationDelay = `${delay}s`;
+
+                    particlesContainer.appendChild(particle);
+                }
+            }
+
+            prevButton.addEventListener('click', () => {
+                showSlide(currentSlideIndex - 1);
+            });
+
+            nextButton.addEventListener('click', () => {
+                showSlide(currentSlideIndex + 1);
+            });
+
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'ArrowRight' || event.key === ' ') {
+                     if(event.key === ' ') event.preventDefault();
+                    if (!nextButton.disabled) {
+                       showSlide(currentSlideIndex + 1);
+                    }
+                } else if (event.key === 'ArrowLeft') {
+                    if (!prevButton.disabled) {
+                        showSlide(currentSlideIndex - 1);
+                    }
+                }
+            });
+
+            setTimeout(() => {
+                 showSlide(0);
+            }, 50);
+        });
+    </script>
+
+</body>
+</html>

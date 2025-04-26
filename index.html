@@ -453,6 +453,266 @@
         @keyframes highlightUI { 0%, 100% { border-color: transparent; box-shadow: none; } 50% { border-color: var(--accent2); box-shadow: 0 0 15px rgba(0, 255, 255, 0.5); } }
         @media (max-width: 768px) { .slide-10 .main-content-area { grid-template-columns: 1fr; gap: 50px; } .slide-10 .mockups-area { order: -1; } }
 
+        /* --- Future Vision Slide Styles --- */
+        .future-vision-slide {
+            background: linear-gradient(160deg, #2c1a4d 0%, #1a1a2e 100%); /* Dark Purple/Indigo Gradient */
+        }
+        .future-vision-slide .slide-title {
+            /* Styles inherited or define specific ones */
+            opacity: 0; transform: translateY(-30px);
+        }
+        .future-vision-slide.active-slide .slide-title {
+             animation: slideDownFadeIn 1.8s ease-out 0.2s forwards;
+        }
+         .future-vision-slide .slide-subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            color: var(--tagline-color);
+            margin-bottom: 40px;
+            max-width: 700px;
+            font-style: italic;
+             opacity: 0; transform: translateY(-30px);
+        }
+         .future-vision-slide.active-slide .slide-subtitle {
+             animation: slideDownFadeIn 1.8s ease-out 0.5s forwards;
+        }
+
+        .future-vision-slide .future-visual-concept {
+            position: relative;
+            width: 200px;
+            height: 150px; /* Adjust size */
+            margin-bottom: 40px;
+            opacity: 0;
+        }
+         .future-vision-slide.active-slide .future-visual-concept {
+            animation: fadeIn 2s ease-out 0.8s forwards;
+         }
+
+         .future-vision-slide .node {
+             position: absolute;
+             width: 40px; height: 40px;
+             border-radius: 50%;
+             display: flex; justify-content: center; align-items: center;
+             font-size: 1.2rem;
+             box-shadow: 0 0 10px rgba(255,255,255,0.3);
+             opacity: 0; transform: scale(0.5);
+         }
+         .future-vision-slide.active-slide .node { animation: popInNode 1.5s ease-out forwards; }
+
+         .future-vision-slide .user-profile {
+             top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.5);
+             background-color: var(--accent2); color: var(--bg-gradient-end);
+             width: 50px; height: 50px; font-size: 1.5rem;
+             animation-delay: 1.0s;
+         }
+         .future-vision-slide .feature-node.f1 { top: 0; left: 0; background-color: #fcc419; animation-delay: 1.5s; }
+         .future-vision-slide .feature-node.f2 { top: 0; right: 0; background-color: #e03131; animation-delay: 1.7s; }
+         .future-vision-slide .feature-node.f3 { bottom: 0; left: 0; background-color: var(--accent1); animation-delay: 1.9s; }
+         .future-vision-slide .feature-node.f4 { bottom: 0; right: 0; background-color: #15aabf; animation-delay: 2.1s; }
+
+         .future-vision-slide .connector {
+             position: absolute;
+             height: 2px; background-color: rgba(255, 255, 255, 0.3);
+             z-index: -1;
+             transform-origin: left center;
+             opacity: 0;
+         }
+         .future-vision-slide.active-slide .connector { animation: drawLine 1.5s ease-out forwards; }
+         .future-vision-slide .connector.c1 { width: 70px; top: 40px; left: 45px; transform: rotate(-45deg) scaleX(0); animation-delay: 1.6s; }
+         .future-vision-slide .connector.c2 { width: 70px; top: 40px; left: 115px; transform: rotate(45deg) scaleX(0); animation-delay: 1.8s; }
+         .future-vision-slide .connector.c3 { width: 70px; top: 110px; left: 45px; transform: rotate(45deg) scaleX(0); animation-delay: 2.0s; }
+         .future-vision-slide .connector.c4 { width: 70px; top: 110px; left: 115px; transform: rotate(-45deg) scaleX(0); animation-delay: 2.2s; }
+
+        @keyframes popInNode { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
+         /* Adjust center node pop in slightly */
+         .future-vision-slide.active-slide .user-profile { animation: popInNode 1.5s ease-out 1.0s forwards; }
+        @keyframes drawLine { from { opacity: 0; transform: scaleX(0); } to { opacity: 1; transform: scaleX(1); } }
+
+
+        .future-vision-slide .future-capabilities {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            width: 100%;
+            max-width: 900px; /* Adjust as needed */
+            text-align: left;
+        }
+        .future-vision-slide .capability-item {
+            display: flex;
+            align-items: flex-start;
+            opacity: 0; transform: translateY(20px);
+        }
+        .future-vision-slide.active-slide .capability-item { animation: slideUpFadeIn 1.6s ease-out forwards; }
+        .future-vision-slide .capability-item:nth-child(1) { animation-delay: 2.0s; }
+        .future-vision-slide .capability-item:nth-child(2) { animation-delay: 2.2s; }
+        .future-vision-slide .capability-item:nth-child(3) { animation-delay: 2.4s; }
+        .future-vision-slide .capability-item:nth-child(4) { animation-delay: 2.6s; }
+
+        .future-vision-slide .capability-icon {
+            font-size: 1.8rem;
+            color: var(--accent3); /* Use a consistent future color */
+            margin-right: 15px;
+             margin-top: 3px;
+             width: 1.3em; text-align: center;
+        }
+         .future-vision-slide .capability-item:nth-child(1) .capability-icon { color: #fcc419; } /* Yellow for price */
+         .future-vision-slide .capability-item:nth-child(2) .capability-icon { color: var(--accent1); } /* Magenta for loyal */
+         .future-vision-slide .capability-item:nth-child(3) .capability-icon { color: #1c7ed6; } /* Blue for bank */
+         .future-vision-slide .capability-item:nth-child(4) .capability-icon { color: #fd7e14; } /* Orange for cross-sell */
+
+        .future-vision-slide .capability-text {
+            font-size: 0.95rem;
+            color: var(--tagline-color);
+            line-height: 1.5;
+        }
+        .future-vision-slide .capability-text strong {
+            display: block;
+            color: var(--text-color);
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+         .future-vision-slide .mini-overlay-future {
+             display: inline-block;
+             padding: 2px 6px;
+             border-radius: 3px;
+             font-size: 0.75rem;
+             font-weight: 500;
+             margin-left: 5px;
+             vertical-align: middle;
+             opacity: 0;
+             background-color: rgba(255,255,255,0.1);
+             border: 1px solid rgba(255,255,255,0.3);
+         }
+          .future-vision-slide.active-slide .mini-overlay-future { animation: fadeIn 1s ease-out forwards; animation-delay: inherit; /* Inherit from parent */ animation-delay: calc(var(--animation-delay) + 0.5s); /* Add delay relative to parent */ }
+          .future-vision-slide .capability-item:nth-child(1) { --animation-delay: 2.0s; }
+          .future-vision-slide .capability-item:nth-child(2) { --animation-delay: 2.2s; }
+          .future-vision-slide .capability-item:nth-child(3) { --animation-delay: 2.4s; }
+          .future-vision-slide .capability-item:nth-child(4) { --animation-delay: 2.6s; }
+
+          /* Style specific future overlays */
+          .future-vision-slide .mini-overlay-future.lowest { background-color: #fcc419; color: var(--bg-gradient-end); }
+          .future-vision-slide .mini-overlay-future.new { background-color: var(--accent1); color: white; }
+          .future-vision-slide .mini-overlay-future.bank { background-color: #1c7ed6; color: white; }
+          .future-vision-slide .mini-overlay-future.cross-sell { background-color: #fd7e14; color: white; }
+
+
+        /* --- Team & Tech Slide Styles --- */
+        .team-tech-slide {
+             background: linear-gradient(200deg, #1a1a2e 0%, #2c3e50 100%); /* Dark Blue/Grey Gradient */
+             justify-content: space-around; /* Distribute content vertically */
+        }
+        .team-tech-slide .slide-title {
+             font-size: clamp(2rem, 5.5vw, 3rem);
+             margin-bottom: 30px;
+              opacity: 0; transform: translateY(-30px);
+        }
+         .team-tech-slide.active-slide .slide-title { animation: slideDownFadeIn 1.8s ease-out 0.2s forwards; }
+
+         .team-tech-slide .team-tech-layout {
+             display: grid;
+             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+             gap: 40px;
+             width: 100%;
+             max-width: 1000px;
+             margin-bottom: 30px;
+             align-items: flex-start;
+         }
+
+         .team-tech-slide .section-heading {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent2); /* Cyan heading */
+            margin-bottom: 20px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+             opacity: 0; transform: translateX(-20px);
+         }
+         .team-tech-slide.active-slide .section-heading { animation: slideUpFadeInPoint 1.6s ease-out forwards; }
+         .team-tech-slide .team-section .section-heading { animation-delay: 0.5s; }
+         .team-tech-slide .tech-section .section-heading { animation-delay: 0.7s; }
+         .team-tech-slide .result-section .section-heading { animation-delay: 2.0s; }
+
+
+         .team-tech-slide .team-section { text-align: center; opacity: 0; transform: scale(0.9); }
+         .team-tech-slide.active-slide .team-section { animation: fadeInScale 1.8s ease-out 0.6s forwards; }
+
+         .team-tech-slide .team-member .team-icon {
+             font-size: 4rem;
+             color: var(--tagline-color);
+             margin-bottom: 10px;
+             display: block;
+         }
+        .team-tech-slide .member-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 5px;
+        }
+        .team-tech-slide .member-role {
+            font-size: 1rem;
+            color: var(--tagline-color);
+        }
+
+         .team-tech-slide .tech-section { opacity: 0; transform: translateX(20px); }
+         .team-tech-slide.active-slide .tech-section { animation: slideUpFadeInPoint 1.6s ease-out 0.8s forwards; }
+
+
+        .team-tech-slide .tools-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+        }
+        .team-tech-slide .tools-list li {
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem;
+            color: var(--tagline-color);
+            margin-bottom: 12px;
+            opacity: 0; transform: translateX(20px);
+        }
+         .team-tech-slide.active-slide .tools-list li { animation: slideUpFadeInPoint 1.6s ease-out forwards; }
+          /* Stagger tool list items */
+          .team-tech-slide .tools-list li:nth-child(1) { animation-delay: 1.0s; }
+          .team-tech-slide .tools-list li:nth-child(2) { animation-delay: 1.15s; }
+          .team-tech-slide .tools-list li:nth-child(3) { animation-delay: 1.3s; }
+          .team-tech-slide .tools-list li:nth-child(4) { animation-delay: 1.45s; }
+          .team-tech-slide .tools-list li:nth-child(5) { animation-delay: 1.6s; }
+          .team-tech-slide .tools-list li:nth-child(6) { animation-delay: 1.75s; }
+
+        .team-tech-slide .tool-icon {
+            color: var(--accent3); /* Green icons */
+            margin-right: 12px;
+            width: 1.2em; text-align: center;
+            font-size: 1.2em;
+        }
+         .team-tech-slide .tools-list strong { color: var(--text-color); margin-right: 5px; }
+
+        .team-tech-slide .result-section {
+             margin-top: 30px;
+             width: 100%;
+             opacity: 0; transform: scale(0.8);
+         }
+          .team-tech-slide.active-slide .result-section { animation: energeticBounce 2s cubic-bezier(0.34, 1.56, 0.64, 1) 2.2s forwards; }
+
+         .team-tech-slide .result-heading { border-bottom: none; text-align: center; color: var(--accent3); font-size: 1.6rem;}
+
+        .team-tech-slide .final-result {
+            font-size: clamp(1.2rem, 3vw, 1.6rem);
+            font-weight: 700;
+            color: var(--text-color);
+             background: linear-gradient(90deg, var(--accent3), var(--accent2));
+             padding: 15px 25px;
+             border-radius: 8px;
+             display: inline-block;
+              box-shadow: 0 0 15px rgba(50, 205, 50, 0.5), 0 0 15px rgba(0, 255, 255, 0.5);
+        }
+        .team-tech-slide .result-icon {
+             margin-right: 10px;
+             color: var(--bg-gradient-end); /* Icon color contrast */
+         }
+          /* Inherited/global footer animation will apply */
+
         /* --- Slide 11: Call to Action --- */
         .slide-11 { background: radial-gradient(ellipse at center, #3a3a8a 0%, var(--bg-gradient-end) 80%); }
         .slide-11 .slide-content { max-width: 900px; }
@@ -821,6 +1081,105 @@
                     <ul class="key-points-list"> <li class="key-point-item"> <i class="fas fa-puzzle-piece fa-fw"></i> <div class="key-point-text"> <strong>Native OS 2.0 App Block</strong> <span>Flawless theme integration via App Blocks. <span class="highlight">No code needed.</span></span> </div> </li> <li class="key-point-item"> <i class="fas fa-rocket fa-fw"></i> <div class="key-point-text"> <strong>Performance First</strong> <span>Minimal footprint, async loading. Won't slow your store.</span> </div> </li> <li class="key-point-item"> <i class="fas fa-brain fa-fw"></i> <div class="key-point-text"> <strong>Intelligent Rules Engine</strong> <span>Precise Targeting (Products, Collections, Tags) & Priority Control.</span> </div> </li> <li class="key-point-item"> <i class="fas fa-palette fa-fw"></i> <div class="key-point-text"> <strong>Intuitive Admin Panel</strong> <span>Easy setup & customization via familiar Shopify Polaris components.</span> </div> </li> <li class="key-point-item"> <i class="fas fa-cloud-sync-alt fa-fw"></i> <div class="key-point-text"> <strong>Reliable & Up-to-Date</strong> <span>Background data sync ensures relevant overlays (Data freshness noted in UI).</span> </div> </li> </ul>
                     <div class="mockups-area"> <div class="mockup theme-editor-mockup"> <span class="mockup-text">Theme Editor Mockup<br>(App Block Added)</span> </div> <div class="mockup admin-panel-mockup"> <span class="mockup-text">Admin Panel Mockup<br>(Rule Configuration UI)</span> </div> </div>
                 </div>
+            </div>
+             <footer class="slide-footer footer-right">Kwik Discovery Demo - Garvit Burad</footer>
+        </div>
+
+        <!-- NEW Slide: Future Vision -->
+        <div class="slide slide-7 future-vision-slide"> <!-- Added future-vision-slide class to differentiate -->
+             <div class="slide-content">
+                <h1 class="slide-title">Future Vision: Kwik Discovery Evolved</h1>
+                <p class="slide-subtitle">Leveraging User Insights (like GoKwik Cohorts) for True 1:1 Personalization</p>
+
+                <!-- Conceptual Core Concept Visual -->
+                <div class="future-visual-concept">
+                    <div class="node user-profile"><i class="fas fa-user-circle"></i></div>
+                    <div class="connector c1"></div>
+                    <div class="node feature-node f1"><i class="fas fa-tags"></i></div>
+                    <div class="connector c2"></div>
+                    <div class="node feature-node f2"><i class="fas fa-gem"></i></div>
+                     <div class="connector c3"></div>
+                    <div class="node feature-node f3"><i class="fas fa-credit-card"></i></div>
+                     <div class="connector c4"></div>
+                     <div class="node feature-node f4"><i class="fas fa-shopping-cart"></i></div>
+                </div>
+
+                <div class="future-capabilities">
+                     <!-- Use a grid or flex container here -->
+                     <div class="capability-item">
+                        <i class="fas fa-search-dollar capability-icon"></i>
+                        <div class="capability-text">
+                            <strong>For the Bargain Hunter:</strong><br>
+                            Show dynamic "Price Drop" alerts & historical low prices based on user price sensitivity.
+                            <span class="mini-overlay-future lowest">Lowest Price This Month!</span>
+                        </div>
+                    </div>
+                     <div class="capability-item">
+                         <i class="fas fa-crown capability-icon"></i>
+                         <div class="capability-text">
+                            <strong>For the Loyal Spender:</strong><br>
+                             Highlight relevant "New Arrivals" or "Purchase Again" prompts instead of generic discounts.
+                             <span class="mini-overlay-future new">Just In: Premium Jackets</span>
+                         </div>
+                    </div>
+                    <div class="capability-item">
+                         <i class="fas fa-credit-card capability-icon"></i>
+                         <div class="capability-text">
+                            <strong>Targeted Affiliate/Bank Offers:</strong><br>
+                            Display specific card/bank offers directly on images for relevant user segments.
+                             <span class="mini-overlay-future bank">10% Off with HDFC Card!</span>
+                         </div>
+                    </div>
+                     <div class="capability-item">
+                         <i class="fas fa-project-diagram capability-icon"></i>
+                         <div class="capability-text">
+                            <strong>Intelligent Cross-Selling:</strong><br>
+                             Suggest complementary items with overlays like "Goes Well With Item in Cart".
+                            <span class="mini-overlay-future cross-sell">Pairs With Shirt in Cart!</span>
+                         </div>
+                    </div>
+                </div>
+            </div>
+             <footer class="slide-footer footer-right">Kwik Discovery Demo - Team Alpha</footer>
+        </div>
+
+        <!-- NEW Slide: Team & Tech -->
+        <div class="slide slide-8 team-tech-slide"> <!-- Added team-tech-slide class to differentiate -->
+             <div class="slide-content">
+                <h1 class="slide-title">Behind Kwik Discovery: Human Ingenuity & AI Collaboration</h1>
+
+                <div class="team-tech-layout">
+                    <div class="team-section">
+                        <h2 class="section-heading">The Core Team</h2>
+                        <div class="team-member">
+                            <!-- Add your image if desired: <img src="your-photo.jpg" alt="Your Name"> -->
+                            <i class="fas fa-user-tie team-icon"></i>
+                            <div class="member-name">Garvit Burad</div>
+                            <div class="member-role">Lead Developer & Visionary</div>
+                        </div>
+                    </div>
+
+                    <div class="tech-section">
+                        <h2 class="section-heading">Powered By AI & Modern Tools</h2>
+                        <ul class="tools-list">
+                            <li><i class="fas fa-brain fa-fw tool-icon"></i> <strong>RooCode AI Agents:</strong> AI Engineering Manager, Architect, Developer & QA team.</li>
+                            <li><i class="fas fa-comments fa-fw tool-icon"></i> <strong>RooCode PM Mode:</strong> PRD Refinements & Strategic Guidance.</li>
+                            <li><i class="fab fa-google fa-fw tool-icon"></i> <strong>Google AI Studio:</strong> Rapid Presentation Development.</li>
+                             <li><i class="fas fa-video fa-fw tool-icon"></i> <strong>Microsoft ClipChamp AI:</strong> Demo Video Creation & Editing.</li>
+                            <li><i class="fas fa-server fa-fw tool-icon"></i> <strong>Vercel Platform:</strong> Presentation Hosting.</li>
+                             <li><i class="fas fa-heart fa-fw tool-icon"></i> <strong>Lovable Integration Concept:</strong> Future UI Vision Inspiration.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                 <div class="result-section">
+                     <h2 class="section-heading result-heading">Hackathon Outcome</h2>
+                    <p class="final-result">
+                        <i class="fas fa-rocket result-icon"></i>
+                        Working and Submission Ready Shopify App
+                    </p>
+                </div>
+
             </div>
              <footer class="slide-footer footer-right">Kwik Discovery Demo - Garvit Burad</footer>
         </div>
